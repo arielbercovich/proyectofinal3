@@ -21,7 +21,7 @@ class Login extends Component {
 
 
                 //Redirigir al usuario a la home del sitio.
-                this.props.navigation.navigate('Home')
+                this.props.navigation.navigate('Menu')
 
             })
             .catch( error => {
@@ -50,10 +50,13 @@ class Login extends Component {
                     value={this.state.password}
                 />
                 <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
-                    <Text style={styles.textButton}>Ingresar</Text>    
+                    <Text style={styles.textButton}>Iniciar sesion</Text>    
                 </TouchableOpacity>
+                <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
                 <TouchableOpacity onPress={ () => this.props.navigation.navigate('Registro')}>
-                   <Text>No tengo cuenta. Registrarme.</Text>
+                <Text style={styles.registro}>
+                  ¿No tenés una cuenta? Registrate
+              </Text>
                 </TouchableOpacity>
             </View>
         )
@@ -61,35 +64,69 @@ class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-    formContainer:{
-        paddingHorizontal:10,
-        marginTop: 20,
+    inicioSesion: {
+      borderColor: 'grey',
+      borderStyle: 'solid',
+      borderWidth: 1,
+      marginLeft: 50,
+      marginTop: 30,
+      marginRight: 50,
+      borderRadius: 20,
+      minHeight: 'auto',
+      backgroundColor: 'white',
     },
-    input:{
-        height:20,
-        paddingVertical:15,
-        paddingHorizontal: 10,
-        borderWidth:1,
-        borderColor: '#ccc',
-        borderStyle: 'solid',
-        borderRadius: 6,
-        marginVertical:10,
+  
+    campos: {
+      alignItems: "center", 
+      marginBottom: 50,
+      padding: 10,
     },
-    button:{
-        backgroundColor:'blue',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        textAlign: 'center',
-        borderRadius:4, 
-        borderWidth:1,
-        borderStyle: 'solid',
-        borderColor: '#28a745'
+  
+  
+    button: {
+      backgroundColor: "#405DE6",
+      marginHorizontal: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      textAlign: "center",
+      borderRadius: 4,
+      borderWidth: 1,
+      borderStyle: "solid",
+      borderColor: "#fff",
+      width: '90%',
+      marginTop: 20,
     },
-    textButton:{
-        color: '#fff'
+  
+    textButton: {
+      color: "#fff",
+    },
+  
+    input: {
+      marginTop: 5,
+      marginBottom: 5,
+      borderColor: 'grey',
+      borderStyle: 'solid',
+      borderWidth: 1,
+      width: '90%',
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 4,
+    },
+  
+    regis:{
+      marginHorizontal: 10,
+      marginTop: 5,
+      marginBottom: 5,
+    },
+  
+    registro: {
+      color: "#405DE6",
+    },
+  
+    errorMessage: {
+      color: 'red',
     }
-
-})
-
+  
+  });
 
 export default Login;

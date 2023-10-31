@@ -13,7 +13,7 @@ class Home extends Component {
     logout(){
         auth.signOut();
          //Redirigir al usuario a la home del sitio.
-        // this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('Login')
     }
 
 
@@ -29,6 +29,29 @@ class Home extends Component {
         )
     }
 }
+const styles = StyleSheet.create({
+    container: {
+        textAlign: 'center',
+        padding: 10,
+        backgroundColor: 'white',
+    },
+
+
+    flatList:{
+        justifyContent:'space-between'
+    },
+
+    touchable:{
+        padding: 4,
+        backgroundColor: '#ccc',
+        marginBottom: 10,
+        borderRadius: 4,
+    },
+
+    touchableText:{
+        fontWeight: 'bold'
+    },
+});
 
 
 
