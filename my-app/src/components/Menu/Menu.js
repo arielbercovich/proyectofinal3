@@ -9,6 +9,7 @@ function Menu (){
     return(
         <Tab.Navigator>
             <Tab.Screen name='Home' component={Home}  options={ { headerShown: false }}/>
+            
         </Tab.Navigator>
     )
 }
