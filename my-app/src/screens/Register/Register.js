@@ -10,7 +10,7 @@ class Register extends Component{
             username:'',
             pass:'',
             bio:'',
-            errors:''
+            errors: null
             
         }
     }
@@ -35,7 +35,10 @@ class Register extends Component{
                 
                     this.props.navigation.navigate('Login')
                 })
-            .catch(error => console.log(error))    
+            .catch(error => {
+                this.setState({ error: 'Este usuario ya fue registrado. Inicie sesión.' });
+                console.log(error);
+            });    
                 
     }
     render(){
@@ -74,12 +77,15 @@ class Register extends Component{
                 {
                     this.state.email == '' || this.state.pass == '' || this.state.username == ''   ?
                     <Text  style={styles.notificacion}> Completar los campos</Text> 
+                    
                     :
-                
+                    
                     <TouchableOpacity onPress={()=>this.register(this.state.email, this.state.pass, this.state.username, this.state.bio)}>
                         <Text style={styles.input} > REGISTRARME </Text>
-                    </TouchableOpacity>     
+                    </TouchableOpacity>    
+                     
                     }
+                     {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
                     <Text>{this.state.errors.message}</Text>
                 <TouchableOpacity onPress={ () => this.props.navigation.navigate('Login')}>
                    <Text>Ya tengo cuenta. Ir al login</Text>
