@@ -32,8 +32,20 @@ class Register extends Component{
                     bio: bio,
                     createdAt: Date.now()
                 })
-                
+                .then(() => {
+                    this.setState({
+                        email:'',
+                        pass:'',
+                        userName:'',
+                        bio:'',
+                        errors:''                       
+                    })
                     this.props.navigation.navigate('Login')
+                })
+                .catch(error => console.log(error)) 
+                
+                
+                    
                 })
             .catch(error => console.log(error))    
                 
@@ -41,7 +53,7 @@ class Register extends Component{
     render(){
         return(
             <View style={styles.formContainer}>
-                <Text>Register</Text>
+                <Text>Registro</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={(text)=>this.setState({email: text, errors:''})}
@@ -75,7 +87,6 @@ class Register extends Component{
                     this.state.email == '' || this.state.pass == '' || this.state.username == ''   ?
                     <Text  style={styles.notificacion}> Completar los campos</Text> 
                     :
-                
                     <TouchableOpacity onPress={()=>this.register(this.state.email, this.state.pass, this.state.username, this.state.bio)}>
                         <Text style={styles.input} > REGISTRARME </Text>
                     </TouchableOpacity>     

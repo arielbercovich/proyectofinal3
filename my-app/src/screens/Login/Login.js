@@ -7,8 +7,16 @@ class Login extends Component {
         super()
         this.state={
             email:'',
-            password:''
+            password:'',
+            errors:''
         }
+    }
+    componentDidMount(){
+        auth.onAuthStateChanged(user =>{
+            if(user){
+                this.props.navigation.navigate('Home')
+            }
+        })
     }
 
     login (email, pass){
@@ -26,7 +34,7 @@ class Login extends Component {
             })
             .catch( error => {
                 //Cuando Firebase responde con un error.
-                console.log(error);
+                console.log({errors:error});
             })
     }
 
@@ -36,23 +44,26 @@ class Login extends Component {
                 <Text>Login</Text>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({email: text})}
-                    placeholder='email'
+                    onChangeText={(text)=>this.setState({errors:'', email: text})}
+                    placeholder='Email'
                     keyboardType='email-address'
                     value={this.state.email}
                     />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({password: text})}
-                    placeholder='password'
+                    onChangeText={(text)=>this.setState({errors: '', password: text})}
+                    placeholder='Password'
                     keyboardType='default'
                     secureTextEntry={true}
                     value={this.state.password}
                 />
-                <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
-                    <Text style={styles.textButton}>Iniciar sesion</Text>    
-                </TouchableOpacity>
-                <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
+                { this.state.errors == '' ?
+                  <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
+                        <Text style={styles.textButton}>Iniciar sesion</Text>    
+                    </TouchableOpacity>
+                    :
+                    <Text>{this.state.errors.message}</Text>
+                }
                 <TouchableOpacity onPress={ () => this.props.navigation.navigate('Registro')}>
                 <Text style={styles.registro}>
                   ¿No tenés una cuenta? Registrate
