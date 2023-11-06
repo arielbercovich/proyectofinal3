@@ -48,34 +48,34 @@ class Register extends Component {
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ email: text, error: '' })}
-                    placeholder='email'
+                    placeholder='Email *'
                     keyboardType='email-address'
                     value={this.state.email}
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ username: text, error: '' })}
-                    placeholder='user name'
+                    placeholder='Nombre de Usuario *'
                     keyboardType='default'
                     value={this.state.username}
                 />
                 <TextInput
-                    style={styles.text}
-                    onChangeText={(text) => this.setState({ bio: text, error: '' })}
-                    placeholder='mini-bio'
-                    keyboardType='default'
-                    value={this.state.bio}
-                />
-                <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ pass: text, error: '' })}
-                    placeholder='password'
+                    placeholder='Contraseña *'
                     keyboardType='default'
                     secureTextEntry={true}
                     value={this.state.pass}
                 />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text) => this.setState({ bio: text, error: '' })}
+                    placeholder='Contanos algo de vos!'
+                    keyboardType='default'
+                    value={this.state.bio}
+                />
                 {this.state.email == '' || this.state.pass == '' || this.state.username == '' ?
-                    <Text style={styles.notificacion}>Completar los campos</Text> :
+                    <Text style={styles.notificacion}>* campo obligatorio</Text> :
                     <TouchableOpacity onPress={() => this.register(this.state.email, this.state.pass, this.state.username, this.state.bio)}>
                         <Text style={styles.input}>REGISTRARME</Text>
                     </TouchableOpacity>}
