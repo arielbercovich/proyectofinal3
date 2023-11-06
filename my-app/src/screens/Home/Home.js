@@ -25,7 +25,7 @@ class Home extends Component {
                         }
                     )
                 })
-
+                console.log(postsAMostrar)
                 this.setState({
                     listaPost: postsAMostrar
                 })
@@ -43,6 +43,7 @@ class Home extends Component {
 
 
     render(){
+        console.log(this.state.listaPost)
         return(
             <View>
                 <Text>HOME</Text>
