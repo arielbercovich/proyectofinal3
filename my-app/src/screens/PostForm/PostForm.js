@@ -7,6 +7,7 @@ class PostForm extends Component {
         super()
         this.state={
            textoPost:'',
+           likes:[]
         }
     }
 
