@@ -17,9 +17,11 @@ class PostForm extends Component {
         db.collection('posts').add({
             owner: owner, //auth.currentUser.email,
             textoPost: textoPost, //this.state.textoPost,
-            createdAt: createdAt //Date.now(), 
+            createdAt: createdAt, //Date.now(),
+            likes: this.state.likes 
         })
-        .then( res => console.log(res))
+
+        .then( res => this.props.navigate('Home'))
         .catch( e => console.log(e))
     }
 
