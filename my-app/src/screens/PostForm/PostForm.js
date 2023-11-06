@@ -3,8 +3,8 @@ import {db, auth } from '../../firebase/config';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 
 class PostForm extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state={
            textoPost:'',
            likes:[]
@@ -21,7 +21,7 @@ class PostForm extends Component {
             likes: this.state.likes 
         })
 
-        .then( res => this.props.navigate('Home'))
+        .then( res => console.log(res))
         .catch( e => console.log(e))
     }
 
