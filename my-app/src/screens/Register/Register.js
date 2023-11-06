@@ -19,7 +19,7 @@ class Register extends Component {
         auth.onAuthStateChanged(user => {
             console.log(user)
             if (user) {
-                this.props.navigation.navigate('Home')
+                this.props.navigation.navigate('Menu')
             }
         })
     }

@@ -1,78 +1,88 @@
-import react, { Component } from 'react';
+import React, { Component } from 'react';
 import { auth } from '../../firebase/config';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 
 class Login extends Component {
-    constructor(){
-        super()
-        this.state={
-            email:'',
-            password:'',
-            errors:''
-        }
-    }
-    componentDidMount(){
-        auth.onAuthStateChanged(user =>{
-            if(user){
-                this.props.navigation.navigate('Home')
-            }
-        })
+    constructor() {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+            error: null, 
+            recordarme: false
+        };
     }
 
-    login (email, pass){
+    componentDidMount() {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                this.props.navigation.navigate('Menu');
+              
+            }
+        });
+    }
+
+    login(email, pass) {
         auth.signInWithEmailAndPassword(email, pass)
-            .then( response => {
-                //Cuando firebase responde sin error
+            .then(response => {
+                // Cuando Firebase responde sin error
                 console.log('Login ok', response);
 
-                //Cambiar los estados a vacío como están al inicio.
+                // Cambiar los estados a vacío como están al inicio.
 
-
-                //Redirigir al usuario a la home del sitio.
-                this.props.navigation.navigate('Menu')
-
+                // Redirigir al usuario a la home del sitio.
+                this.props.navigation.navigate('Menu');
             })
-            .catch( error => {
-                //Cuando Firebase responde con un error.
-                console.log({errors:error});
-            })
+            .catch(error => {
+                // Cuando Firebase responde con un error.
+                console.log({ error });
+                this.setState({ error }); // Actualizar el estado de error
+            });
+    }
+    recordarme(){
+      this.setState({recordarme: !recordarme})
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <View style={styles.formContainer}>
                 <Text>Login</Text>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({errors:'', email: text})}
+                    onChangeText={(text) => this.setState({ error: null, email: text })}
                     placeholder='Email'
                     keyboardType='email-address'
                     value={this.state.email}
-                    />
+                />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({errors: '', password: text})}
+                    onChangeText={(text) => this.setState({ error: null, password: text })}
                     placeholder='Password'
                     keyboardType='default'
                     secureTextEntry={true}
                     value={this.state.password}
                 />
-                { this.state.errors == '' ?
-                  <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
-                        <Text style={styles.textButton}>Iniciar sesion</Text>    
+                {this.state.error === null ? (
+                    <TouchableOpacity style={styles.button} onPress={() => this.login(this.state.email, this.state.password)}>
+                        <Text style={styles.textButton}>Iniciar sesión</Text>
                     </TouchableOpacity>
-                    :
-                    <Text>{this.state.errors.message}</Text>
-                }
-                <TouchableOpacity onPress={ () => this.props.navigation.navigate('Registro')}>
-                <Text style={styles.registro}>
-                  ¿No tenés una cuenta? Registrate
-              </Text>
+                ) : (
+                    <View>
+                        <Text style={styles.errorMessage}>{this.state.error.message}</Text>
+                    </View>
+                )}
+
+
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Registro')}>
+                    <Text style={styles.registro}>
+                        ¿No tenés una cuenta? Registrate
+                    </Text>
                 </TouchableOpacity>
             </View>
-        )
+        );
     }
 }
+
 
 const styles = StyleSheet.create({
     inicioSesion: {
