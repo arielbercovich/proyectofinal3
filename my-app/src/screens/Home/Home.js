@@ -1,6 +1,7 @@
 import react, { Component } from 'react';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
 import { db,auth } from '../../firebase/config';
+import Camera from '../../components/Camara/Camera'
 import Post from '../../components/Post';
 
 class Home extends Component {
@@ -47,6 +48,7 @@ class Home extends Component {
         return(
             <View>
                 <Text>HOME</Text>
+                <Camera/>
                 <TouchableOpacity onPress={()=>this.logout()}>
                     <Text>Logout</Text>
                 </TouchableOpacity>

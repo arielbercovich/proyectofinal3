@@ -25,7 +25,18 @@ componentDidMount(){
 
 render(){
     return(
-        <View></View>
+        <View>
+            <Camera 
+            type={Camera.Constants.Type.front}
+            ref={ metodosDeCamera=> this.metodosDeCamera = metodosDeCamera}
+            />
+            <TouchableOpacity>
+
+            <Text>
+                Sacar foto
+            </Text>
+            </TouchableOpacity>
+        </View>
         )
     
 }
