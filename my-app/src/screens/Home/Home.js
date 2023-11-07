@@ -48,7 +48,6 @@ class Home extends Component {
         return(
             <View>
                 <Text>HOME</Text>
-                <Camera/>
                 <TouchableOpacity onPress={()=>this.logout()}>
                     <Text>Logout</Text>
                 </TouchableOpacity>
