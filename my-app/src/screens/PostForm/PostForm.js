@@ -1,14 +1,14 @@
 import react, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
-import Camera from '../../components/Camara/Camera';
+import MyCamera from '../../components/Camara/MyCamera';
 
 class PostForm extends Component {
     constructor(props){
         super(props)
         this.state={
            textoPost:'',
-           likes:[]
+           likes:[],
         }
     }
 
@@ -31,7 +31,6 @@ class PostForm extends Component {
     render(){
         return(
             <View style={styles.formContainer}>
-                <Camera/>
                 <Text>New Post</Text>
                 <TextInput
                     style={styles.input}
