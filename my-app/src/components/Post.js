@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
 import { db,auth } from '../firebase/config';
 import firebase from 'firebase';
-import MyCamera from './Camara/MyCamera'
+import {AntDesign} from "@expo/vector-icons"
 
 
 class Post extends Component {
@@ -12,6 +12,7 @@ class Post extends Component {
             like: false,
             cantidadDeLikes: this.props.infoPost.datos.likes.length,
             showCamera: true,
+            arrayComentarios:[]
 
         }
     }
@@ -23,6 +24,19 @@ class Post extends Component {
                 like: true
             })
         }
+        this.getComentarios(this.props.id);
+    }
+
+    getComentarios(postId){
+        db.collection('posts').onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.id == postId){
+                    this.setState({
+                        arrayComentarios: doc.data().comentarios || []
+                    });
+                }
+            });
+        });
     }
 
 
@@ -74,9 +88,15 @@ class Post extends Component {
                 </TouchableOpacity>
                 :
                 <TouchableOpacity onPress={()=>this.likear()}>
-                    Like
+                    <AntDesign name="hearto" size={24} color="black" />
                 </TouchableOpacity>
                 }
+                <TouchableOpacity
+                onPress={()=> this.props.navigation.navigate('comentarios',{postId: this.props.posteo.id})}
+                >
+                    <Text>Comentarios</Text>
+                    </TouchableOpacity>
+
                 
                 
             </View>

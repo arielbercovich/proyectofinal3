@@ -1,6 +1,5 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import React, { Component } from 'react';
-import { useNavigation } from '@react-navigation/native'; // Importa useNavigation desde React Navigation
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import React, { Component } from 'react'
 import { db, auth } from '../../firebase/config';
 
 class Search extends Component {
@@ -30,9 +29,34 @@ class Search extends Component {
         });
     }
 
-    render() {
-        const navigation = useNavigation(); // Obtiene acceso a la navegación
+    buscar(text) {
+        this.setState({
+            textoUsuario: text,
+            search: text.length > 0,
+            usersFiltradoMail: text == ''
+                ? []
+                : this.state.users.filter(user =>
+                    user.data.owner.toLowerCase().includes(text.toLowerCase()) ||
+                    user.data.username.toLowerCase().includes(text.toLowerCase())
+                )
+        });
+    }
+    
+    controlarCambios(text) {
+        this.setState({
+            textoUsuario: text
+        });
+    }
 
+    borrarBuscador() {
+        this.setState({
+            usersFiltradoMail: [],
+            textoUsuario: '',
+            search: false
+        });
+    }
+
+    render() {
         return (
             <View style={styles.scroll}>
                 <Text style={styles.titulo}> BUSCADOR </Text>
@@ -56,9 +80,7 @@ class Search extends Component {
                             keyExtractor={item => item.id.toString()}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.navigate('Profile', { email: item.data.owner });
-                                    }}
+                                    onPress={() => this.props.navigation.navigate('My profile', { email: item.data.owner })}
                                 >
                                     <View style={styles.view}>
                                         <Text style={styles.nombre}> Usuario: </Text>
