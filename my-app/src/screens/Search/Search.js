@@ -22,7 +22,8 @@ class Search extends Component {
                     data: doc.data()
                 });
                 this.setState({
-                    users: user
+                    users: user,
+                    loading: false
                 });
             });
         });
@@ -31,16 +32,16 @@ class Search extends Component {
     buscar(text) {
         this.setState({
             textoUsuario: text,
-            search: true
-        });
-
-        const usersFiltradoMail = this.state.users.filter(user => user.data.owner.toLowerCase().includes(text.toLowerCase()));
-
-        this.setState({
-            usersFiltradoMail: usersFiltradoMail
+            search: text.length > 0,
+            usersFiltradoMail: text == ''
+                ? []
+                : this.state.users.filter(user =>
+                    user.data.owner.toLowerCase().includes(text.toLowerCase()) ||
+                    user.data.username.toLowerCase().includes(text.toLowerCase())
+                )
         });
     }
-
+    
     controlarCambios(text) {
         this.setState({
             textoUsuario: text
@@ -60,15 +61,18 @@ class Search extends Component {
             <View style={styles.scroll}>
                 <Text style={styles.titulo}> BUSCADOR </Text>
                 <TextInput
-                    placeholder='Buscar un usuario por correo'
+                    placeholder='Buscar perfil por nombre de usuario o correo'
                     keyboardType='default'
                     style={styles.text}
                     onChangeText={text => this.controlarCambios(text)}
                     value={this.state.textoUsuario}
                 />
 
+                <TouchableOpacity onPress={() => this.buscar(this.state.textoUsuario)}>
+                    <Text style={styles.searchButton}>Buscar</Text>
+                </TouchableOpacity>
                 {this.state.usersFiltradoMail.length === 0 && this.state.search ? (
-                    <Text style={styles.notificacion}>El email no existe</Text>
+                    <Text style={styles.notificacion}>El perfil no existe</Text>
                 ) : (
                     <View style={styles.container}>
                         <FlatList
@@ -79,8 +83,8 @@ class Search extends Component {
                                     onPress={() => this.props.navigation.navigate('My profile', { email: item.data.owner })}
                                 >
                                     <View style={styles.view}>
-                                        <Text style={styles.nombre}> Email: </Text>
-                                        <Text style={styles.users}>{item.data.owner}</Text>
+                                        <Text style={styles.nombre}> Usuario: </Text>
+                                        <Text style={styles.users}>{item.data.username}</Text>
                                     </View>
                                 </TouchableOpacity>
                             )}
@@ -137,7 +141,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: '10%',
     },
-
+    searchButton: {
+        backgroundColor: '#926F5B',
+        color: 'white',
+        padding: 10,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 10,
+        borderRadius: 5,
+    },
+    
     notificacion: {
         color: '#926F5B',
         marginTop: 0,
