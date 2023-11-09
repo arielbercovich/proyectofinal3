@@ -62,30 +62,24 @@ class Post extends Component {
    render(){
     return(
         <View>
-            { this.state.showCamera ?
-                <View>
-                    <Text style={styles.title}> NEW POST </Text>
-                    < MyCamera onImageUpload= {url=> this.onImageUpload(url)} />
-                </View>
+                <Text>Datos del Post</Text>
+                <Text> Email: {this.props.infoPost.datos.owner}</Text>
+                <Text>Texto: {this.props.infoPost.datos.textoPost}</Text>
+                <Text>cantidad de likes: {this.state.cantidadDeLikes}</Text>
+
+                {/* If ternario */}
+                {this.state.like ? 
+                <TouchableOpacity onPress={()=>this.unLike()}>
+                    QuitarLike
+                </TouchableOpacity>
                 :
-                <View> 
-                    <Text style={styles.posteo}> SUBIR POSTEO </Text>
-                    <TextInput  
-                        placeholder='Texto posteo'
-                        keyboardType='default'
-                        style={styles.text}
-                        multiline = {true}
-                        numberOfLines = {4}
-                        onChangeText={ text => this.setState({textoPost:text}) }
-                        value={this.state.textoPost}
-                    /> 
-               
-                    <TouchableOpacity onPress={()=>this.newPost(this.state.owner, this.state.textoPost, this.state.foto)}>
-                        <Text style={styles.input} >Publicar posteo</Text>
-                    </TouchableOpacity>
-                </View>
-            }
-        </View>
+                <TouchableOpacity onPress={()=>this.likear()}>
+                    Like
+                </TouchableOpacity>
+                }
+                
+                
+            </View>
     )
 }
 }

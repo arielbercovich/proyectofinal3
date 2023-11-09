@@ -1,69 +1,111 @@
 import React, { Component } from "react";
 import { Camera } from 'expo-camera';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {db, storage} from '../../firebase/config'
 
 class MyCamera extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            permissions: false,
-            photo: null, // Cambiado a null para manejar la foto capturada
-        };
-        this.metodosDeCamera = null; // Cambiado a null para referenciar los métodos internos del componente camera
+            permisos: false,
+            urlInternaFoto:'',
+            mostrarCamara: true
+        }
+        this.metodosDeCamera = '';
     }
 
     componentDidMount() {
         // Pedir permiso para uso de hardware
         Camera.requestCameraPermissionsAsync()
-            .then(({ status }) => {
-                if (status === 'granted') {
-                    this.setState({ permissions: true });
-                } else {
-                    console.log("No se otorgaron los permisos de la cámara.");
-                }
+            .then(() => {
+                this.setState({
+                    permisos:true
+                })
             })
             .catch((e) => console.log(e));
     }
 
-    takePicture = async () => {
-        if (this.metodosDeCamera) {
-            try {
-                const photo = await this.metodosDeCamera.takePictureAsync();
-                this.setState({ photo });
-            } catch (error) {
-                console.error("Error al tomar la foto:", error);
-            }
-        }
-    };
+    SacarFoto(){
+        console.log('sacando foto...');
+        this.metodosDeCamara.takePictureAsync()
+        .then(photo => {
+            this.setState({
+                urlInternaFoto: photo.uri,
+                mostrarCamara: false
+            })
+        })
+        .catch(e=> console.log(e))
+        
+    }
+    guardarFoto(){
+        fetch(this.state.urlInternaFoto)
+        .then(res => res.blob())
+        .then(image =>{
+            const ruta = storage.ref(`photos/${Date.now()}.jpg`);
+            ruta.put(image)
+            .then(()=> {
+                ruta.getDownloadURL()
+                .then(url => {
+                    this.props.traerUrlDeFoto(url)
+                    this.setState({
+                        urlInternaFoto:''
+                    })
+                })
+            })
+        })
+        .catch(e => console.log(e))
+    }
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                {this.state.permissions ? (
-                    this.state.photo ? ( // Si se ha capturado una foto, muestra la foto
-                        <View style={{ flex: 1 }}>
-                            <Text>Foto capturada:</Text>
-                            <Image source={{ uri: this.state.photo.uri }} style={{ flex: 1 }} />
-                        </View>
-                    ) : ( // Si no se ha capturado una foto, muestra la cámara
-                        <Camera
-                            type={Camera.Constants.Type.front}
-                            ref={(metodosDeCamera) => (this.metodosDeCamera = metodosDeCamera)}
-                            style={{ flex: 1 }}
-                        />
-                    )
-                ) : (
-                    <Text>No se otorgaron permisos de cámara.</Text>
-                )}
+            <View style={styles.container}>
+                {
+                    this.state.permisos ? 
+                        this.state.mostrarCamara === false ? 
+                        <React.Fragment>
+                            <Image
+                                source ={{uri : this.state.urlInternaFoto}}
+                                style = {styles.cameraBody}
+                            />
+                            <TouchableOpacity onPress ={() => this.guardarFoto()}>
+                                <Text>Aceptar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Text>Cancelar</Text>
+                            </TouchableOpacity>
 
-                {this.state.photo ? null : (
-                    <TouchableOpacity onPress={this.takePicture}>
-                        <Text>Sacar foto</Text>
-                    </TouchableOpacity>
-                )}
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <Camera
+                                type ={Camera.Constants.Type.front}
+                                ref = {metodosDeCamara => this.metodosDeCamara = metodosDeCamara}
+                                style = {styles.cameraBody}
+                            />
+                        <TouchableOpacity style = {styles.button} onPress={() => this.SacarFoto()}>
+                            <Text>Sacar Foto</Text>
+                        </TouchableOpacity>
+                    </React.Fragment>
+                        
+                : 
+                    <Text>No se otorgaron permisos de cámara.</Text>
+                }
+
             </View>
         );
     }
 }
+const styles = StyleSheet.create({
+    container:{
+        //flex:1,
+    },
+    cameraBody: {
+        flex:7
+    },
+    button:{
+        flex:2,
+    }
+})
+
 
 export default MyCamera;

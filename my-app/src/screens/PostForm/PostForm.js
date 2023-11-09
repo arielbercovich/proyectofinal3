@@ -10,33 +10,36 @@ class PostForm extends Component {
             textoPost: '',
             likes: [],
             photo: null, // Agrega un estado para almacenar la foto capturada
+            fotoUrl: ''
         };
     }
 
-    crearPost(owner, textoPost, createdAt) {
-        const { photo } = this.state; // Obtén la foto capturada
+    crearPost(owner, textoPost, createdAt, fotoUrl) {
+        //const { photo } = this.state; // Obtén la foto capturada
         // Crear la colección 'posts' con los datos del post y la foto si está presente
         db.collection('posts')
             .add({
                 owner: owner,
                 textoPost: textoPost,
                 createdAt: createdAt,
-                likes: this.state.likes,
-                photo: photo, // Agrega la foto al post
+                likes: [],
+                fotoUrl: fotoUrl, // Agrega la foto al post
             })
             .then((res) => console.log(res))
             .catch((e) => console.log(e));
     }
 
-    setPhoto = (photo) => {
-        this.setState({ photo });
-    };
+    trearUrlDeFoto(url){
+        this.setState({
+            fotoUrl:url
+        })
+    }
 
     render() {
         return (
             <View style={styles.formContainer}>
                 <Text>New Post</Text>
-                <MyCamera onPhotoCapture={this.setPhoto} /> {/* Agrega MyCamera para capturar una foto */}
+                <MyCamera style={ styles.camera} trearUrlDeFoto={url=>this.trearUrlDeFoto(url)} /> {/* Agrega MyCamera para capturar una foto */}
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ textoPost: text })}
@@ -46,7 +49,7 @@ class PostForm extends Component {
                 />
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost, Date.now())}
+                    onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost,this.state.fotoUrl, Date.now())}
                 >
                     <Text style={styles.textButton}>Postear</Text>
                 </TouchableOpacity>
