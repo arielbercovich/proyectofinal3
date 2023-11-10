@@ -63,6 +63,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginTop: 20,
     },
+    camera: {
+        flex: 10,  // Use flex to take up available space
+        height: '100%%',  // Set the height to 50% of the available space
+        aspectRatio: 1,  // Maintain the aspect ratio of the camera preview
+        marginBottom: 10,  // Add marginBottom for spacing
+    },
     input: {
         height: 20,
         paddingVertical: 15,

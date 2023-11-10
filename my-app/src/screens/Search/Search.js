@@ -80,7 +80,7 @@ class Search extends Component {
                             keyExtractor={item => item.id.toString()}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate('My profile', { email: item.data.owner })}
+                                    onPress={() => this.props.navigation.navigate('Profile', { email: item.data.owner })}
                                 >
                                     <View style={styles.view}>
                                         <Text style={styles.nombre}> Usuario: </Text>
@@ -98,93 +98,95 @@ class Search extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 0,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        elevation: 3,
+        alignItems: 'center', // Alinea los elementos en el centro
     },
 
     foto: {
         height: 200,
         width: 200,
-        borderRadius: 50,
-        padding: 5,
+        borderRadius: 100, // Un valor grande para hacer que la imagen sea circular
+        marginBottom: 10,
     },
 
     titulo: {
-        fontFamily: 'Oswald, sans-serif',
-        color: 'white',
+        fontSize: 24,
+        color: '#4CAF50', // Color verde similar al 'liked' en el Post
         fontWeight: 'bold',
-        fontSize: 35,
         textAlign: 'center',
-        backgroundColor: '#926F5B',
-        marginBottom: 70,
+        marginBottom: 15,
     },
 
     text: {
-        color: '#926F5B',
+        color: '#4CAF50',
         marginTop: 0,
-        marginBottom: '10%',
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: 25,
-        marginLeft: 0,
+        marginBottom: 15,
+        fontSize: 16,
         fontStyle: 'italic',
-        borderWidth: 2,
-        borderColor: '#926F5B',
-        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#4CAF50',
+        borderRadius: 5,
+        padding: 5,
+        textAlign: 'center',
     },
 
     input: {
         height: 32,
         color: 'white',
-        backgroundColor: '#D3B9AA',
-        fontFamily: 'Oswald, sans-serif',
-        fontWeight: 'bold',
-        fontSize: 25,
+        backgroundColor: '#4CAF50',
+        fontSize: 16,
+        borderRadius: 5,
+        marginBottom: 15,
+        paddingHorizontal: 10,
         textAlign: 'center',
-        marginBottom: '10%',
     },
+
     searchButton: {
-        backgroundColor: '#926F5B',
+        backgroundColor: '#4CAF50',
         color: 'white',
         padding: 10,
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 10,
         borderRadius: 5,
+        marginBottom: 10,
     },
-    
+
     notificacion: {
-        color: '#926F5B',
+        color: '#4CAF50',
         marginTop: 0,
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: 20,
-        marginLeft: 0,
+        fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 10,
     },
 
     users: {
-        color: '#926F5B',
+        color: '#4CAF50',
         marginTop: 0,
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: 24,
-        marginLeft: 0,
+        fontSize: 20,
         fontWeight: 'bold',
-        flexDirecion: 'wrap',
-        textAlign: 'center',
+        marginBottom: 10,
         textDecorationLine: 'underline',
+        textAlign: 'center',
     },
 
     view: {
-        display: 'flex',
         flexDirection: 'row',
-        textAlign: 'center',
+        alignItems: 'center', // Alinea los elementos en el centro
+        justifyContent: 'center', // Centra horizontalmente los elementos
+        marginBottom: 10,
     },
 
     nombre: {
         marginTop: 0,
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: 18,
-        color: '#926F5B',
-        marginLeft: 0,
+        fontSize: 14,
+        color: '#4CAF50',
+        marginBottom: 10,
+        textAlign: 'center',
     },
 });
 

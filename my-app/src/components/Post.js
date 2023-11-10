@@ -1,152 +1,155 @@
 import React, { Component } from 'react';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
-import { db,auth } from '../firebase/config';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList } from 'react-native';
+import { db, auth } from '../firebase/config';
 import firebase from 'firebase';
-import {AntDesign} from "@expo/vector-icons"
-
+import { AntDesign } from "@expo/vector-icons"
 
 class Post extends Component {
-    constructor(props){
-        super(props)
-        this.state={
+    constructor(props) {
+        super(props);
+        this.state = {
             like: false,
-            cantidadDeLikes: this.props.infoPost.datos.likes.length,
+            cantidadDeLikes: 0,
             showCamera: true,
-            arrayComentarios:[]
-
-        }
+            arrayComentarios: []
+        };
     }
-    
-    componentDidMount(){
-        //Indicar si el post ya está likeado o no.
-        if(this.props.infoPost.datos.likes.includes(auth.currentUser.email)){
-            this.setState({
-                like: true
+
+    componentDidMount() {
+        const { infoPost, id } = this.props;
+
+        infoPost && infoPost.datos && infoPost.datos.likes && infoPost.datos.likes.length > 0
+            ? this.setState({
+                like: infoPost.datos.likes.includes(auth.currentUser.email),
+                cantidadDeLikes: infoPost.datos.likes.length
             })
-        }
-        this.getComentarios(this.props.id);
+            : null;
+
+        this.getComentarios(id);
     }
 
-    getComentarios(postId){
-        db.collection('posts').onSnapshot((querySnapshot) => {
+    getComentarios(postId) {
+        db.collection('posts').onSnapshot((querySnapshot) => { // querySnapshot --> objeto con resultados de busqueda
             querySnapshot.forEach((doc) => {
-                if(doc.id == postId){
-                    this.setState({
+                doc.id === postId
+                    ? this.setState({
                         arrayComentarios: doc.data().comentarios || []
-                    });
-                }
+                    })
+                    : null;
             });
         });
     }
 
+    likear() {
+        const { infoPost } = this.props;
 
-   likear(){
-    //El post tendría que guardar una propiedad like con un array de los usuario que lo likearon.
-
-    //update en base de datos
-    db.collection('posts').doc(this.props.infoPost.id).update({
-        likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-    })
-    .then( res => {
-        this.setState({
-            like: true,
-            cantidadDeLikes: this.props.infoPost.datos.likes.length
-        })
-    })
-    .catch( e => console.log(e))
-
-
-   }
-
-   unLike(){
-    //Quitar del array de likes al usario que está mirando el post.
-    db.collection('posts').doc(this.props.infoPost.id).update({
-        likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-    })
-    .then( res => {
-        this.setState({
-            like: false,
-            cantidadDeLikes: this.props.infoPost.datos.likes.length
-        })
-    })
-    .catch( e => console.log(e))
-   }
-   
-
-   render(){
-    return(
-        <View>
-                <Text>Datos del Post</Text>
-                <Text> Email: {this.props.infoPost.datos.owner}</Text>
-                <Text>Texto: {this.props.infoPost.datos.textoPost}</Text>
-                <Text>cantidad de likes: {this.state.cantidadDeLikes}</Text>
-
-                {/* If ternario */}
-                {this.state.like ? 
-                <TouchableOpacity onPress={()=>this.unLike()}>
-                    QuitarLike
-                </TouchableOpacity>
-                :
-                <TouchableOpacity onPress={()=>this.likear()}>
-                    <AntDesign name="hearto" size={24} color="black" />
-                </TouchableOpacity>
-                }
-                <TouchableOpacity
-                onPress={()=> this.props.navigation.navigate('comentarios',{postId: this.props.posteo.id})}
-                >
-                    <Text>Comentarios</Text>
-                    </TouchableOpacity>
-
-                
-                
-            </View>
-    )
-}
-}
-const styles= StyleSheet.create ({
-
-    posteo:{
-        fontFamily: 'Oswald, sans-serif',
-        color:'white',
-        fontWeight: 'bold',
-        fontSize: 35,
-        textAlign:'center',
-        backgroundColor:'#926F5B',
-        marginBottom: 70,
-    },
-
-    text:{
-        color:'#926F5B',
-        marginTop: 0,
-        marginBottom: '10%',
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize: 25,
-        marginLeft:'0',
-        fontStyle: 'italic', 
-        border: '2px solid #926F5B',
-        borderRadius: 4 , 
-        },
-    
-    input:{
-        height: 32,
-        color:'white',
-        backgroundColor: '#D3B9AA',
-        fontFamily: 'Oswald, sans-serif',
-        fontWeight:'bold',
-        fontSize: 25,
-        textAlign: 'center',
-        marginBottom: '10%',
-    },
-    
-    title:{
-        fontFamily: 'Oswald, sans-serif',
-        color:'white',
-        fontWeight: 'bold',
-        fontSize: 35,
-        textAlign:'center',
-        backgroundColor:'#926F5B',
-        marginBottom: 15,
-        marginTop:15
+        infoPost && infoPost.datos
+            ? db.collection('posts').doc(infoPost.id).update({
+                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+            })
+                .then(res => {
+                    this.setState({
+                        like: true,
+                        cantidadDeLikes: infoPost.datos.likes.length
+                    });
+                })
+                .catch(e => console.log(e))
+            : null;
     }
-})
+
+    unLike() {
+        const { infoPost } = this.props;
+
+        infoPost && infoPost.datos
+            ? db.collection('posts').doc(infoPost.id).update({
+                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+            })
+                .then(res => {
+                    this.setState({
+                        like: false,
+                        cantidadDeLikes: infoPost.datos.likes.length
+                    });
+                })
+                .catch(e => console.log(e))
+            : null;
+    }
+
+    render() {
+        const { infoPost, navigation } = this.props;
+        const { cantidadDeLikes, like } = this.state;
+
+        return (
+            <View style={styles.container}>
+                {infoPost && infoPost.datos ? (
+                    <React.Fragment>
+                        <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
+                        <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
+                        <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
+                        {like
+                            ? <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}><AntDesign name="heart" size={24} color="red" /><Text style={styles.likeButtonText}> Quitar Like</Text></TouchableOpacity>
+                            : <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}><AntDesign name="hearto" size={24} color="black" /><Text style={styles.likeButtonText}> Like</Text></TouchableOpacity>
+                        }
+                        <TouchableOpacity style={styles.commentsButton} onPress={() => navigation.navigate('comentarios', { postId: infoPost.id })}>
+                            <Text style={styles.commentsButtonText}>Ver Comentarios</Text>
+                        </TouchableOpacity>
+                    </React.Fragment>
+                ) : (
+                    <Text style={styles.errorText}>Error: No se encontraron datos del post.</Text>
+                )}
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        elevation: 3,
+    },
+    ownerText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    postText: {
+        fontSize: 14,
+        marginBottom: 10,
+    },
+    likesText: {
+        fontSize: 12,
+        color: 'gray',
+        marginBottom: 10,
+    },
+    likeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 5,
+        borderWidth: 1,
+        padding: 5,
+        marginBottom: 10,
+    },
+    likeButtonText: {
+        marginLeft: 5,
+    },
+    commentsButton: {
+        backgroundColor: 'lightgray',
+        borderRadius: 5,
+        padding: 10,
+    },
+    commentsButtonText: {
+        textAlign: 'center',
+        color: 'black',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 10,
+    },
+});
+
 export default Post;
+
