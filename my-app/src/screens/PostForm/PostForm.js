@@ -14,10 +14,11 @@ class PostForm extends Component {
             loadingPhoto: false
         };
     }
-    cambiarPosteoBoton(value){
+
+    cambiarPosteoBoton(value) {
         this.setState({
-            loadingPhoto:value
-        })
+            loadingPhoto: value
+        });
     }
 
     crearPost(owner, textoPost, fotoUrl, createdAt) {
@@ -27,26 +28,33 @@ class PostForm extends Component {
             .add({
                 owner: owner,
                 textoPost: textoPost,
-                fotoUrl:fotoUrl,
+                fotoUrl: fotoUrl,
                 likes: [],
                 createdAt: createdAt,
-                 
             })
-            .then((res) => console.log(res) )
+            .then((res) => {
+                console.log(res);
+                // Después de crear el post, redirigir a Home
+                this.props.navigation.navigate('Home');
+            })
             .catch((e) => console.log(e));
     }
 
-    trearUrlDeFoto(url){
+    trearUrlDeFoto(url) {
         this.setState({
-            fotoUrl:url
-        })
+            fotoUrl: url
+        });
     }
 
     render() {
         return (
             <View style={styles.formContainer}>
                 <Text>New Post</Text>
-                <MyCamera style={ styles.camera} cambiarPosteoBoton={(value)=> this.cambiarPosteoBoton(value)} traerUrlDeFoto={url=>this.trearUrlDeFoto(url)} />
+                <MyCamera
+                    style={styles.camera}
+                    cambiarPosteoBoton={(value) => this.cambiarPosteoBoton(value)}
+                    traerUrlDeFoto={(url) => this.trearUrlDeFoto(url)}
+                />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ textoPost: text })}
@@ -54,11 +62,16 @@ class PostForm extends Component {
                     keyboardType='default'
                     value={this.state.textoPost}
                 />
-                {this.state.loadingPhoto == false && 
-                <TouchableOpacity style={styles.button} onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now())}>
-                    <Text style={styles.textButton}>Postear</Text>
-                </TouchableOpacity>
-    }
+                {this.state.loadingPhoto == false && (
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() =>
+                            this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now())
+                        }
+                    >
+                        <Text style={styles.textButton}>Postear</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         );
     }
