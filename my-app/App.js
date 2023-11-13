@@ -7,6 +7,8 @@ import Profile from './src/screens/Profile/Profile'
 import Login from './src/screens/Login/Login';
 import Home from './src/screens/Home/Home';
 import Menu from './src/components/Menu/Menu';
+import Comments from './src/screens/Comentarios/Comentario';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +19,9 @@ export default function App() {
       <Stack.Screen name='Login' component={Login} options={ { headerShown: false } }/>
       <Stack.Screen name='Registro' component={Register} options={ { headerShown: false } }/>
       <Stack.Screen name='Menu' component={Menu} options={ { headerShown: false } }/>
+      <Stack.Screen name='Comentario' component={Comments} options={ { headerShown: false } }/>
       <Stack.Screen name="Profile" component={Profile} />
+
 
       {/* Si implementamos tabnavigation para el resto de la app. El tercer componente debe ser una navegación que tenga a Home como primer screen */}
     </Stack.Navigator>
