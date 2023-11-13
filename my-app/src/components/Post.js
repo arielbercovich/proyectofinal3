@@ -85,6 +85,7 @@ class Post extends Component {
                         <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
                         <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
+                        <Image style={styles.foto} source={{uri: infoPost.datos.fotoUrl}} resizeMode='cover'/>
                         {like
                             ? <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}><AntDesign name="heart" size={24} color="red" /><Text style={styles.likeButtonText}> Quitar Like</Text></TouchableOpacity>
                             : <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}><AntDesign name="hearto" size={24} color="black" /><Text style={styles.likeButtonText}> Like</Text></TouchableOpacity>
@@ -108,6 +109,11 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         elevation: 3,
+    },
+    foto: {
+        height: 300,
+        width: '100%',
+        borderRadius: 8
     },
     ownerText: {
         fontSize: 16,
