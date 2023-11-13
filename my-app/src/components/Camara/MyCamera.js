@@ -3,13 +3,14 @@ import { Camera } from 'expo-camera';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import {db, storage} from '../../firebase/config'
 
+
 class MyCamera extends Component {
     constructor(props) {
         super(props);
         this.state = {
             permisos: false,
             urlInternaFoto:'',
-            mostrarCamara: true
+            mostrarCamara: true,
         }
         this.metodosDeCamara = '';
     }
@@ -38,6 +39,7 @@ class MyCamera extends Component {
         
     }
     guardarFoto(){
+        this.props.cambiarPosteoBoton(true)
         fetch(this.state.urlInternaFoto)
         .then(res => res.blob())
         .then(image =>{
@@ -50,10 +52,17 @@ class MyCamera extends Component {
                     this.setState({
                         urlInternaFoto:''
                     })
+                    this.props.cambiarPosteoBoton(false)
                 })
             })
         })
         .catch(e => console.log(e))
+    }
+    clearPicture(){
+        this.setState({
+            foto: '',
+            mostrarCamara: true, 
+        })
     }
 
     render() {

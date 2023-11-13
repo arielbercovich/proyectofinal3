@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { db, auth } from '../../firebase/config';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
 import MyCamera from '../../components/Camara/MyCamera';
 
 class PostForm extends Component {
@@ -10,22 +10,29 @@ class PostForm extends Component {
             textoPost: '',
             likes: [],
             photo: null, // Agrega un estado para almacenar la foto capturada
-            fotoUrl: ''
+            fotoUrl: '',
+            loadingPhoto: false
         };
     }
+    cambiarPosteoBoton(value){
+        this.setState({
+            loadingPhoto:value
+        })
+    }
 
-    crearPost(owner, textoPost, createdAt, fotoUrl) {
+    crearPost(owner, textoPost, fotoUrl, createdAt) {
         //const { photo } = this.state; // Obtén la foto capturada
         // Crear la colección 'posts' con los datos del post y la foto si está presente
         db.collection('posts')
             .add({
                 owner: owner,
                 textoPost: textoPost,
-                createdAt: createdAt,
+                fotoUrl:fotoUrl,
                 likes: [],
-                fotoUrl: fotoUrl, // Agrega la foto al post
+                createdAt: createdAt,
+                 
             })
-            .then((res) => console.log(res))
+            .then((res) => console.log(res) )
             .catch((e) => console.log(e));
     }
 
@@ -39,7 +46,7 @@ class PostForm extends Component {
         return (
             <View style={styles.formContainer}>
                 <Text>New Post</Text>
-                <MyCamera style={ styles.camera} trearUrlDeFoto={url=>this.trearUrlDeFoto(url)} /> {/* Agrega MyCamera para capturar una foto */}
+                <MyCamera style={ styles.camera} cambiarPosteoBoton={(value)=> this.cambiarPosteoBoton(value)} traerUrlDeFoto={url=>this.trearUrlDeFoto(url)} />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ textoPost: text })}
@@ -47,16 +54,11 @@ class PostForm extends Component {
                     keyboardType='default'
                     value={this.state.textoPost}
                 />
-                <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                    this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now());
-                    // Después de crear el post, redirigir a Home
-                    this.props.navigation.navigate('Home');
-                }}
-            >
-                <Text style={styles.textButton}>Postear</Text>
-            </TouchableOpacity>
+                {this.state.loadingPhoto == false && 
+                <TouchableOpacity style={styles.button} onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now())}>
+                    <Text style={styles.textButton}>Postear</Text>
+                </TouchableOpacity>
+    }
             </View>
         );
     }
