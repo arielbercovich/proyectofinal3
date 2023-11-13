@@ -48,11 +48,15 @@ class PostForm extends Component {
                     value={this.state.textoPost}
                 />
                 <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost,this.state.fotoUrl, Date.now())}
-                >
-                    <Text style={styles.textButton}>Postear</Text>
-                </TouchableOpacity>
+                style={styles.button}
+                onPress={() => {
+                    this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now());
+                    // Después de crear el post, redirigir a Home
+                    this.props.navigation.navigate('Home');
+                }}
+            >
+                <Text style={styles.textButton}>Postear</Text>
+            </TouchableOpacity>
             </View>
         );
     }
