@@ -19,26 +19,26 @@ class Profile extends Component {
         this.fetchData();
     }
 
-    componentDidUpdate() {
-        const profileEmail = this.props.route.params.email;
+    // componentDidUpdate() {
+    //     const profileEmail = this.props.route.params.email;
     
-        this.state.currentEmail === profileEmail
-            ? null
-            : this.setState({
-                posts: [],
-                user: [],
-                currentEmail: profileEmail,
-            });
+    //     this.state.currentEmail === profileEmail
+    //         ? null
+    //         : this.setState({
+    //             posts: [],
+    //             user: [],
+    //             currentEmail: profileEmail,
+    //         });
     
-        this.fetchData();
-    }
+    //     this.fetchData();
+    // }
     
 
     fetchData() {
         const profileEmail = this.props.route.params.email;
 
         db.collection('posts')
-            .where('owner', '==', profileEmail)
+            .where('owner', '==', profileEmail).orderBy('createdAt', 'desc')
             .onSnapshot((docs) => {
                 let posts = [];
                 docs.forEach((doc) => {
@@ -46,9 +46,11 @@ class Profile extends Component {
                         id: doc.id,
                         data: doc.data(),
                     });
+                    console.log('Posts', posts)
                     this.setState({
                         posts: posts,
                         currentEmail: profileEmail,
+                        
                     });
                 });
             });
@@ -62,6 +64,7 @@ class Profile extends Component {
                         id: doc.id,
                         data: doc.data(),
                     });
+                    console.log('User', user)
                     this.setState({
                         user: user,
                     });
@@ -122,11 +125,12 @@ class Profile extends Component {
                 <Text style={styles.text2}>
                     {this.state.posts.length > 0
                         ? `LISTA DE SUS ${this.state.posts.length} POSTEOS`
-                        : 'NO SE ENCONTRARON POSTEOS PARA ESTE USUARIO'}
+                        : 'NO SE ENCONTRARON POSTEOS PARA ESTE USUARIO' }
                 </Text>
                 
                  
                     <FlatList
+                        style = {styles.posts}
                         data={this.state.posts}
                         keyExtractor={(onePost) => onePost.id.toString()}
                         renderItem={({ item }) => <Post postData={item} navigation={this.props.navigation} />}
@@ -243,6 +247,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 0,
     },
+    posts:{
+        textAlign: 'center',
+        padding: 10,
+        backgroundColor: 'white',
+        },
+  
 });
 
 export default Profile

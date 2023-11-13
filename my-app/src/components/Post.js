@@ -18,14 +18,16 @@ class Post extends Component {
     componentDidMount() {
         const { infoPost, id } = this.props;
 
-        infoPost && infoPost.datos && infoPost.datos.likes && infoPost.datos.likes.length > 0
+        console.log('prueba', this.props.infoPost);
+
+        this.props.infoPost && this.props.infoPost.datos && this.props.infoPost.datos.likes && this.props.infoPost.datos.likes.length > 0
             ? this.setState({
-                like: infoPost.datos.likes.includes(auth.currentUser.email),
-                cantidadDeLikes: infoPost.datos.likes.length
+                like: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
+                cantidadDeLikes: this.props.infoPost.datos.likes.length
             })
             : null;
 
-        this.getComentarios(id);
+        this.getComentarios(this.props.infoid);
     }
 
     getComentarios(postId) {
@@ -77,10 +79,12 @@ class Post extends Component {
     render() {
         const { infoPost, navigation } = this.props;
         const { cantidadDeLikes, like } = this.state;
+        console.log('test', this.props.infoPost)
 
         return (
             <View style={styles.container}>
-                {infoPost && infoPost.datos ? (
+                
+                {infoPost ? (
                     <React.Fragment>
                         <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
                         <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
