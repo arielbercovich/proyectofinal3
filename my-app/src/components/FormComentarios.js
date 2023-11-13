@@ -29,7 +29,7 @@ import firebase from 'firebase';
                 value={this.state.comentario}
                 multiline ={true}
                 numberOfLines ={4}
-                style={Styles.input}
+                style= {styles.input}
                 />
                 <TouchableOpacity
                 onPress ={()=> this.enviarComentario(this.state.comentario)}>
@@ -40,10 +40,10 @@ import firebase from 'firebase';
         )
     }
 }
-// const styles = StyleSheet.create({
-//     input:{
-//         borderWidth:1,
-//         borderColor:'green'
-//     }
-// })
+ const styles = StyleSheet.create({
+     input:{
+         borderWidth:1,
+         borderColor:'green'
+     }
+ })
 export default FormComentarios

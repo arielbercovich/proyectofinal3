@@ -69,7 +69,7 @@ class Comments extends Component {
         );
     }
 }
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     input:{
         height: 32,
         color:'white',
