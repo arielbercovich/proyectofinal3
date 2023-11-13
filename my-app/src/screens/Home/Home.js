@@ -52,13 +52,18 @@ class Home extends Component {
                     <FlatList
                         data={this.state.listaPost}
                         keyExtractor={(unPost) => unPost.id}
-                        renderItem={({ item }) => <Post infoPost={item} />}
+                        renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item} />}
                     />
                 )}
+                <TouchableOpacity
+                    style={styles.buttonContainer}
+                    onPress={() => this.props.navigation.navigate('Comentarios')}
+                >
+                    <Text style={styles.buttonText}>Ver Comentarios</Text>
+                </TouchableOpacity>
             </ScrollView>
         );
-    }
-}
+    }}
 
 const styles = StyleSheet.create({
     container: {
