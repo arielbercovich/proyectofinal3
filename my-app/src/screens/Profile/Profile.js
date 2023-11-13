@@ -109,7 +109,7 @@ class Profile extends Component {
                         <View style={styles.textContainer}>
                             <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.username} </Text>
                             <Text style={styles.text}> Email: {this.state.user[0].data.owner} </Text>
-                            <Text style={styles.text}> Bibliografía: {this.state.user[0].data.bio} </Text>
+                            <Text style={styles.text}> Biografía: {this.state.user[0].data.bio} </Text>
                         </View>
                         <Image
                             style={styles.foto}
