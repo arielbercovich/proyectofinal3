@@ -47,10 +47,10 @@ class Post extends Component {
             ? db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
-                .then(res => {
+                .then(res => {console.log(infoPost);
                     this.setState({
                         like: true,
-                        cantidadDeLikes: infoPost.datos.likes.length
+                        cantidadDeLikes: this.state.cantidadDeLikes+1
                     });
                 })
                 .catch(e => console.log(e))
@@ -64,10 +64,10 @@ class Post extends Component {
             ? db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
             })
-                .then(res => {
+                .then(res => {console.log(infoPost);
                     this.setState({
                         like: false,
-                        cantidadDeLikes: infoPost.datos.likes.length
+                        cantidadDeLikes: this.state.cantidadDeLikes-1
                     });
                 })
                 .catch(e => console.log(e))

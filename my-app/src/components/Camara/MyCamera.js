@@ -11,7 +11,7 @@ class MyCamera extends Component {
             urlInternaFoto:'',
             mostrarCamara: true
         }
-        this.metodosDeCamera = '';
+        this.metodosDeCamara = '';
     }
 
     componentDidMount() {
@@ -58,7 +58,7 @@ class MyCamera extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.cameraBody}>
                 {
                     this.state.permisos ? 
                         this.state.mostrarCamara === false ? 
@@ -96,12 +96,13 @@ class MyCamera extends Component {
     }
 }
 const styles = StyleSheet.create({
-    container:{
-        //flex:1,
-    },
     cameraBody: {
-        flex:7
+        height: '50vh',
+        width: '100vw',
+        position: 'absolute',
+        marginTop:50
     },
+
     button:{
         flex:2,
     }
