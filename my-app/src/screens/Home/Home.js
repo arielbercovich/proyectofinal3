@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 
     touchableText: {
         fontWeight: 'bold',
-    },
+    }
 });
 
 export default Home;
