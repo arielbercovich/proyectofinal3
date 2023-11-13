@@ -59,7 +59,6 @@ class Home extends Component {
                     style={styles.buttonContainer}
                     onPress={() => this.props.navigation.navigate('Comentarios')}
                 >
-                    <Text style={styles.buttonText}>Ver Comentarios</Text>
                 </TouchableOpacity>
             </ScrollView>
         );

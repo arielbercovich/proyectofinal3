@@ -111,14 +111,6 @@ class Post extends Component {
                         <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
                         <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
-<<<<<<< HEAD
-                        
-                        {like
-                            ? <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}><AntDesign name="heart" size={24} color="red" /><Text style={styles.likeButtonText}> Quitar Like</Text></TouchableOpacity>
-                            : <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}><AntDesign name="hearto" size={24} color="black" /><Text style={styles.likeButtonText}> Like</Text></TouchableOpacity>
-                        }
-                        <TouchableOpacity style={styles.commentsButton} onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}>
-=======
                         {infoPost.datos.fotoUrl && (
                             <Image style={styles.foto} source={{ uri: infoPost.datos.fotoUrl }} resizeMode='cover' />
                         )}
@@ -137,7 +129,6 @@ class Post extends Component {
                             style={styles.commentsButton}
                             onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}
                         >
->>>>>>> refs/remotes/origin/main
                             <Text style={styles.commentsButtonText}>Ver Comentarios</Text>
                         </TouchableOpacity>
                     </React.Fragment>
