@@ -1,9 +1,9 @@
-import {Text,View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
 import React, {Component} from 'react'
-import {db, auth} from "../firebase/config"
-import firebase from 'firebase'
+import {Text,View,TextInput,TouchableOpacity,StyleSheet,Image,FlatList,} from "react-native";
+import {db, auth} from "../firebase/config";
+import firebase from 'firebase';
 
-export default class FormComentarios extends Component {
+ class FormComentarios extends Component {
     constructor(props){
         super(props)
         this.state ={
@@ -29,7 +29,7 @@ export default class FormComentarios extends Component {
                 value={this.state.comentario}
                 multiline ={true}
                 numberOfLines ={4}
-                style={Styles.input}
+                style= {styles.input}
                 />
                 <TouchableOpacity
                 onPress ={()=> this.enviarComentario(this.state.comentario)}>
@@ -40,9 +40,10 @@ export default class FormComentarios extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    input:{
-        borderWidth:1,
-        borderColor:'green'
-    }
-})
+ const styles = StyleSheet.create({
+     input:{
+         borderWidth:1,
+         borderColor:'green'
+     }
+ })
+export default FormComentarios

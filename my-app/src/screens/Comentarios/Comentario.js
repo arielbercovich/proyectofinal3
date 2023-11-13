@@ -1,27 +1,32 @@
-import {Text, View, FlatList, TouchableOpacity} from "react-native"
+import {Text, View, FlatList, TouchableOpacity, StyleSheet} from "react-native"
 import React, {Component} from 'react'
 import Post from "../../components/Post"
 import { db } from "../../firebase/config"
 import firebase from "firebase"
 import TouchHistoryMath from "react-native/Libraries/Interaction/TouchHistoryMath"
 import { TextInput } from "react-native-web"
-class Comentario extends Component{
-    constructor(props){
-        super(props)
-        this.state={
-            id: this.props.roue.params.id,
-            data:'',
-            comentario:''
-        }
+import FormComentarios from "../../components/FormComentarios"
+
+class Comments extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: this.props.route.params.postId,  // Cambio aquí
+            data: '',
+            comentario: ''
+        };
     }
-    componentDidMount(){
-        db.collection('posts').doc(this.state.id).onSnapshot(doc => {this.setState({data: doc.data()})})
-        
+
+    componentDidMount() {
+        db.collection('posts').doc(this.state.id).onSnapshot(doc => {
+            this.setState({ data: doc.data() });
+        });
     }
-    subirComentario(comentario){
-        db.collection('posts').doc(thi.state.id).update({
+
+    subirComentario(comentario) {
+        db.collection('posts').doc(this.state.id).update({
             comentario: firebase.firestore.FieldValue.arrayUnion({
-                owner:auth.currentUser.email,
+                owner: auth.currentUser.email,
                 createdAt: Date.now(),
                 comentario: comentario
             })
@@ -31,55 +36,40 @@ class Comentario extends Component{
                 owner: auth.currentUser.email,
                 createdAt: Date.now(),
                 comentario: this.state.comentario
-            })
+            });
             this.setState({
                 comentario: ''
-            })
-        })
+            });
+        });
     }
-    render(){
-        return(
-            <View style ={styles.scroll}>
-                <Text style = {styles.text}>Comentarios del posteo</Text>
-                {this.state.data.comentario == undefined ?
-                <Text></Text>
-                :
-                this.state.data.comentario.length == 0 ?
-                <Text style = {styles.text2}>No hay comentarios, se el primero</Text>
-                :
-                <View style={styles.scroll}>
-                    <FlatList
-                        data={this.state.data.comentario.sort((a,b) => b.createdAt - a.createdAt)}
-                        keyExtractor = {oneComment => oneComment.createdAt.toString()}
-                        renderItem={({item}) => <Text style ={styles.textComment}>{item.owner} comento : {item.comentario}</Text>}
+
+    render() {
+        return (
+            <View style={styles.scroll}>
+                <Text style={styles.text}>Comentarios del posteo</Text>
+                {this.state.data.comentario == undefined ? (
+                    <Text></Text>
+                ) : this.state.data.comentario.length === 0 ? (
+                    <Text style={styles.text2}>No hay comentarios, sé el primero</Text>
+                ) : (
+                    <View style={styles.scroll}>
+                        <FlatList
+                            data={this.state.data.comentario.sort((a, b) => b.createdAt - a.createdAt)}
+                            keyExtractor={oneComment => oneComment.createdAt.toString()}
+                            renderItem={({ item }) => (
+                                <Text style={styles.textComent}>{item.owner} comentó: {item.comentario}</Text>
+                            )}
                         />
-                
-            
+                    </View>
+                )}
+
+                <FormComentarios></FormComentarios> 
+                )
             </View>
-    }
-    <TextInput
-        placeholder ='agregar comentario'
-        style = {styles.input}
-        keyboardTyoe = 'default'
-        onChangeText = {text => this.setState({comentario : text})}
-        value = {this.state.comentario}
-        />
-        {this.state.comentario == '' ?
-            <TouchableOpacity>
-                <Text style = {styles.text2}>Escriba para comentar</Text>
-            </TouchableOpacity>
-            :
-            <TouchableOpacity onPress ={() => this.subirComentario(this.state.comentario)}>
-                <Text style={styles.subir}>Subir comentario</Text>
-            </TouchableOpacity>
-
-        }
-        </View>
-
-        )
+        );
     }
 }
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     input:{
         height: 32,
         color:'white',

@@ -94,7 +94,7 @@ class Post extends Component {
                             ? <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}><AntDesign name="heart" size={24} color="red" /><Text style={styles.likeButtonText}> Quitar Like</Text></TouchableOpacity>
                             : <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}><AntDesign name="hearto" size={24} color="black" /><Text style={styles.likeButtonText}> Like</Text></TouchableOpacity>
                         }
-                        <TouchableOpacity style={styles.commentsButton} onPress={() => navigation.navigate('comentarios', { postId: infoPost.id })}>
+                        <TouchableOpacity style={styles.commentsButton} onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}>
                             <Text style={styles.commentsButtonText}>Ver Comentarios</Text>
                         </TouchableOpacity>
                     </React.Fragment>
