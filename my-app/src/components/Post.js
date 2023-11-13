@@ -11,7 +11,9 @@ class Post extends Component {
             like: false,
             cantidadDeLikes: 0,
             showCamera: true,
-            arrayComentarios: []
+            arrayComentarios: [],
+            showModal: false
+            
         };
     }
 
@@ -28,7 +30,9 @@ class Post extends Component {
             : null;
 
         this.getComentarios(this.props.infoid);
+      
     }
+    
 
     getComentarios(postId) {
         db.collection('posts').onSnapshot((querySnapshot) => { // querySnapshot --> objeto con resultados de busqueda
@@ -45,7 +49,7 @@ class Post extends Component {
     likear() {
         const { infoPost } = this.props;
 
-        infoPost && infoPost.datos
+        infoPost && infoPost.data
             ? db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
@@ -62,11 +66,11 @@ class Post extends Component {
     unLike() {
         const { infoPost } = this.props;
 
-        infoPost && infoPost.datos
+        infoPost && infoPost.data
             ? db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
             })
-                .then(res => {console.log(infoPost);
+                .then(res => {
                     this.setState({
                         like: false,
                         cantidadDeLikes: this.state.cantidadDeLikes-1
@@ -75,27 +79,65 @@ class Post extends Component {
                 .catch(e => console.log(e))
             : null;
     }
+    deletePost() {
+        db.collection("posts")
+          .doc(this.props.infoPost.id)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+          });
+      }
+      showModal() {
+        this.setState({
+          showModal: true,
+        });
+      }
+    
+      closeModal() {
+        this.setState({
+          showModal: false,
+        });
+      }
 
     render() {
         const { infoPost, navigation } = this.props;
         const { cantidadDeLikes, like } = this.state;
-        console.log('test', this.props.infoPost)
-
+    
         return (
             <View style={styles.container}>
-                
-                {infoPost ? (
+                {infoPost && infoPost.datos ? (
                     <React.Fragment>
                         <Image style={styles.foto} source={{uri: infoPost.datos.fotoUrl}} resizeMode='cover'/>
                         <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
                         <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
+<<<<<<< HEAD
                         
                         {like
                             ? <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}><AntDesign name="heart" size={24} color="red" /><Text style={styles.likeButtonText}> Quitar Like</Text></TouchableOpacity>
                             : <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}><AntDesign name="hearto" size={24} color="black" /><Text style={styles.likeButtonText}> Like</Text></TouchableOpacity>
                         }
                         <TouchableOpacity style={styles.commentsButton} onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}>
+=======
+                        {infoPost.datos.fotoUrl && (
+                            <Image style={styles.foto} source={{ uri: infoPost.datos.fotoUrl }} resizeMode='cover' />
+                        )}
+                        {like ? (
+                            <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
+                                <AntDesign name="heart" size={24} color="red" />
+                                <Text style={styles.likeButtonText}> Quitar Like</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.likeButton} onPress={() => this.likear()}>
+                                <AntDesign name="hearto" size={24} color="black" />
+                                <Text style={styles.likeButtonText}> Like</Text>
+                            </TouchableOpacity>
+                        )}
+                        <TouchableOpacity
+                            style={styles.commentsButton}
+                            onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}
+                        >
+>>>>>>> refs/remotes/origin/main
                             <Text style={styles.commentsButtonText}>Ver Comentarios</Text>
                         </TouchableOpacity>
                     </React.Fragment>
@@ -106,7 +148,7 @@ class Post extends Component {
         );
     }
 }
-
+    
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',

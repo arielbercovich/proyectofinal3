@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import Post from '../../components/Post';
+
 
 class Profile extends Component {
     constructor(props) {
@@ -12,31 +13,12 @@ class Profile extends Component {
             posts: [],
             pass: '',
             errors: '',
+            modalVisible: false,
         };
     }
 
     componentDidMount() {
-        this.fetchData();
-    }
-
-    // componentDidUpdate() {
-    //     const profileEmail = this.props.route.params.email;
-    
-    //     this.state.currentEmail === profileEmail
-    //         ? null
-    //         : this.setState({
-    //             posts: [],
-    //             user: [],
-    //             currentEmail: profileEmail,
-    //         });
-    
-    //     this.fetchData();
-    // }
-    
-
-    fetchData() {
         const profileEmail = this.props.route.params.email;
-
         db.collection('posts')
             .where('owner', '==', profileEmail).orderBy('createdAt', 'desc')
             .onSnapshot((docs) => {
@@ -46,10 +28,9 @@ class Profile extends Component {
                         id: doc.id,
                         data: doc.data(),
                     });
-                    console.log('Posts', posts)
                     this.setState({
                         posts: posts,
-                        currentEmail: profileEmail,
+                        
                         
                     });
                 });
@@ -64,50 +45,129 @@ class Profile extends Component {
                         id: doc.id,
                         data: doc.data(),
                     });
-                    console.log('User', user)
                     this.setState({
                         user: user,
                     });
                 });
             });
+    
+
+        
     }
+    
+
+    componentDidUpdate() {
+        const profileEmail = this.props.route.params.email;
+
+        if (this.state.currentEmail === profileEmail) return;
+    
+        this.setState({
+            posts: [],
+            user: [],
+            currentEmail: profileEmail
+        })
+
+        db.collection('posts').where('owner', '==', profileEmail).onSnapshot( 
+            docs => {
+                let posts = [];
+                docs.forEach( doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                    this.setState({
+                        posts: posts,
+                        currentEmail: profileEmail
+                    })
+                }) 
+            }
+        )
+        db.collection('users').where('owner', '==', profileEmail).onSnapshot(
+            docs => {
+                let user = [];
+                docs.forEach( doc => {
+                    user.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                    this.setState({
+                        user: user,
+                        currentEmail: profileEmail
+                    })
+                }) 
+            }
+        ) 
+    }
+    
+
+    
 
     logOut() {
-        auth
-            .signOut()
+        auth.signOut()
             .then((res) => {
                 this.props.navigation.navigate('Login');
             })
             .catch((error) => console.log('error'));
-    }    
+    } 
+    eliminarPerfil(){
+        if(this.state.user.length == 0){
+            console.log('')
+        }else{
+            auth.signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
+            .then(() => {
+                db.collection('users').doc(this.state.user[0].id).delete()
+                .then(()=> {
+                    const user = firebase.auth().currentUser;
+                    user.delete()
+                    this.setState({
+                        modalVisible: false
+                    })
+                    this.props.navigation.navigate('Register')
+                })
+                .catch(error => this.setState({errors: error}))
+            })
+        }
+    }   
 
-    delete() {
-        this.state.user.length === 0
-            ? console.log('')
-            : auth
-                  .signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
-                  .then(() => {
-                      db.collection('users')
-                          .doc(this.state.user[0].id)
-                          .delete()
-                          .then(() => {
-                              const user = firebase.auth().currentUser;
-                              user.delete();
-                              this.props.navigation.navigate('Register');
-                          })
-                          .catch((error) => console.log(error));
-                  })
-                  .catch((error) => this.setState({ errors: error }));
-    }
-    
     render() {
         return (
             <View style={styles.scroll}>
                 <Text style={styles.perfil}> PERFIL </Text>
+                <Modal
+                animationType="slide"
+                transparent={false}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                    this.setState({
+                        modalVisible: !this.state.modalVisible
+                    })
+                }}>
+                <Text style={styles.textModal}>Confirme su contraseña</Text>
+                <TextInput  
+                    style={styles.inputModal}
+                    placeholder='Password'
+                    keyboardType='default'
+                    secureTextEntry= {true}
+                    onChangeText={ text => this.setState({errors:'', pass: text}) }
+                    value={this.state.pass}
+                />  
+                    
+                { this.state.errors == '' ?
+                    <TouchableOpacity  style={styles.text} onPress={() => this.eliminarPerfil()}>
+                        <Text style={styles.logout}>Borrar perfil</Text>
+                    </TouchableOpacity>
+                    :
+                    <Text style={styles.notificacion}>{this.state.errors.message}</Text>
+                }
 
-                {this.state.user.length === 0 ? (
+                <TouchableOpacity onPress={() => this.setState({ modalVisible: !this.state.modalVisible })}>
+                    <Text style={styles.logout}>Cancelar</Text>
+                </TouchableOpacity>
+            </Modal>
+
+                {this.state.user.length === 0 ? 
                     <Text> </Text>
-                ) : (
+                 : 
                     <View style={styles.container}>
                         <View style={styles.textContainer}>
                             <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.username} </Text>
@@ -120,38 +180,32 @@ class Profile extends Component {
                             resizeMode="cover"
                         />
                     </View>
-                )}
+                }
 
-                <Text style={styles.text2}>
-                    {this.state.posts.length > 0
-                        ? `LISTA DE SUS ${this.state.posts.length} POSTEOS`
-                        : 'NO SE ENCONTRARON POSTEOS PARA ESTE USUARIO' }
-                </Text>
-                
-                 
-                    <FlatList
+                <Text style={styles.text2}>Lista de sus {this.state.posts.length} posteos</Text>
+                <FlatList
                         style = {styles.posts}
                         data={this.state.posts}
                         keyExtractor={(onePost) => onePost.id.toString()}
-                        renderItem={({ item }) => <Post postData={item} navigation={this.props.navigation} />}
+                        renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}
                     />
                
 
 
-                {this.state.user.length === 0 ? (
+                {this.state.user.length === 0 ? 
                     <Text> </Text>
-                ) : this.state.user[0].data.owner === auth.currentUser.email ? (
+                 : this.state.user[0].data.owner === auth.currentUser.email ? 
                     <View>
                         <TouchableOpacity style={styles.text} onPress={() => this.logOut()}>
                             <Text style={styles.logout}>Log out</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.text} onPress={() => this.delete()}>
+                        <TouchableOpacity style={styles.text} onPress={() => this.setState({modalVisible: !this.state.modalVisible})}>
                             <Text style={styles.logout}>Eliminar Perfil</Text>
                         </TouchableOpacity>
                     </View>
-                ) : (
+                 : 
                     <Text></Text>
-                )}
+                }
             </View>
         );
     }
