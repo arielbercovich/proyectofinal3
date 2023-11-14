@@ -1,93 +1,64 @@
 import React, { Component } from 'react';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, ScrollView, Image } from 'react-native';
-import { db, auth } from '../../firebase/config';
-import Post from '../../components/Post';
+import {auth, db} from '../../firebase/config';
+import {Text, View, FlatList, StyleSheet} from 'react-native'
+import Post from '../../components/Post'
 
-class Home extends Component {
-    constructor() {
+class Home extends Component{
+    constructor(){
         super();
         this.state = {
-            listaPost: []
-        };
+            posts:[]
+        }
     }
 
-    componentDidMount() {
-        // Traer datos
-        db.collection('posts').onSnapshot(
-            (posteos) => {
-                let postsAMostrar = [];
-
-                posteos.forEach((unPost) => {
-                    postsAMostrar.push({
-                        id: unPost.id,
-                        datos: unPost.data(),
-                    });
-                });
-                console.log(postsAMostrar);
-                this.setState({
-                    listaPost: postsAMostrar,
-                });
+    componentDidMount(){
+        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
+            docs => {
+                let posts = [];
+                docs.forEach( doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                    this.setState({
+                        posts: posts
+                    })
+                }) 
             }
-        );
+        )
     }
 
-    logout() {
-        auth.signOut();
-        // Redirigir al usuario a la home del sitio.
-        this.props.navigation.navigate('Login');
+
+    render(){
+        return(
+            <>
+                <Text style={styles.text}> HOME </Text>
+                <FlatList 
+                    data={this.state.posts}
+                    keyExtractor={ onePost => onePost.id.toString()}
+                    renderItem={ ({item}) => <Post postData={item} navigation={this.props.navigation}/>}
+                />  
+            </>
+        )
     }
+}
 
-    render() {
-        console.log(this.state.listaPost);
-        return (
-            <ScrollView contentContainerStyle={styles.container}>
-                <Text>HOME</Text>
-                <TouchableOpacity onPress={() => this.logout()}>
-                    <Text>Logout</Text>
-                </TouchableOpacity>
-                <Text>Lista de Posts</Text>
-                {this.state.listaPost.length === 0 ? (
-                    <Text>Cargando...</Text>
-                ) : (
-                    <FlatList
-                            data={this.state.listaPost}
-                            keyExtractor={(unPost) => unPost.id.toString()}
-                            renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
-                    />
+const styles= StyleSheet.create ({
 
-
-
-                )}
-                <TouchableOpacity
-                    style={styles.buttonContainer}
-                    onPress={() => this.props.navigation.navigate('Comentarios')}
-                >
-                </TouchableOpacity>
-            </ScrollView>
-        );
-    }}
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: 'white',
-    },
-
-    flatList: {
-        justifyContent: 'space-between',
-    },
-
-    touchable: {
-        padding: 4,
-        backgroundColor: '#ccc',
-        marginBottom: 10,
-        borderRadius: 4,
-    },
-
-    touchableText: {
+    text:{
+        fontFamily: 'Oswald, sans-serif',
+        color:'white',
         fontWeight: 'bold',
+        fontSize: 35,
+        textAlign:'center',
+        backgroundColor:'#926F5B',
+        marginBottom: 15,
+        marginTop:15
     }
-});
+})
 
-export default Home;
+export default Home
+
+
+
+    

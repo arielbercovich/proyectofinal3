@@ -1,117 +1,124 @@
-import React, { Component } from 'react';
-import { db, auth } from '../../firebase/config';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
-import MyCamera from '../../components/Camara/MyCamera';
+import React, {Component} from 'react'
+import {Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native'
+import {db, auth} from '../../firebase/config'
+import MyCamera from '../../components/Camara/MyCamera'
 
-class PostForm extends Component {
-    constructor(props) {
-        super(props);
+class NewPost extends Component {
+    constructor(props){
+        super(props)
         this.state = {
-            textoPost: '',
+            owner:'',
+            textoPost:'',
+            createdAt:'',
+            foto:'',
+            showCamera:true,
+        }
+    }
+
+    newPost(owner, textoPost, foto){
+        db.collection('posts').add({
+            owner: auth.currentUser.email,
+            textoPost: textoPost,
+            foto: foto,
             likes: [],
-            photo: null, // Agrega un estado para almacenar la foto capturada
-            fotoUrl: '',
-            loadingPhoto: false
-        };
-    }
-
-    cambiarPosteoBoton(value) {
-        this.setState({
-            loadingPhoto: value
-        });
-    }
-
-    crearPost(owner, textoPost, fotoUrl, createdAt) {
-        //const { photo } = this.state; // Obtén la foto capturada
-        // Crear la colección 'posts' con los datos del post y la foto si está presente
-        db.collection('posts')
-            .add({
-                owner: owner,
-                textoPost: textoPost,
-                fotoUrl: fotoUrl,
-                likes: [],
-                comentario: [],
-                createdAt: createdAt,
+            comentario:[],
+            createdAt: Date.now()
+        })
+        .then(() => {
+            this.setState({
+            textoPost: '',
+            showCamera: true,
             })
-            .then((res) => {
-                console.log(res);
-                // Después de crear el post, redirigir a Home
-                this.props.navigation.navigate('Home');
-            })
-            .catch((e) => console.log(e));
+            this.props.navigation.navigate('Home')
+        })
+        .catch(error => console.log(error))       
     }
-
-    trearUrlDeFoto(url) {
+    
+    onImageUpload(url){
         this.setState({
-            fotoUrl: url
-        });
+            foto:url,
+            showCamera: false,
+        })
     }
-
-    render() {
-        return (
-            <View style={styles.formContainer}>
-                <Text>New Post</Text>
-                <MyCamera
-                    style={styles.camera}
-                    cambiarPosteoBoton={(value) => this.cambiarPosteoBoton(value)}
-                    traerUrlDeFoto={(url) => this.trearUrlDeFoto(url)}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ textoPost: text })}
-                    placeholder='Escribir...'
-                    keyboardType='default'
-                    value={this.state.textoPost}
-                />
-                {this.state.loadingPhoto == false && (
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() =>
-                            this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.fotoUrl, Date.now())
-                        }
-                    >
-                        <Text style={styles.textButton}>Postear</Text>
-                    </TouchableOpacity>
-                )}
+    
+    render(){
+        return(
+            <View>
+                { this.state.showCamera ?
+                    <View>
+                        <Text style={styles.title}> NEW POST </Text>
+                        < MyCamera onImageUpload= {url=> this.onImageUpload(url)} />
+                    </View>
+                    :
+                    <View> 
+                        <Text style={styles.posteo}> SUBIR POSTEO </Text>
+                        <TextInput  
+                            placeholder='Texto posteo'
+                            keyboardType='default'
+                            style={styles.text}
+                            multiline = {true}
+                            numberOfLines = {4}
+                            onChangeText={ text => this.setState({textoPost:text}) }
+                            value={this.state.textoPost}
+                        /> 
+                   
+                        <TouchableOpacity onPress={()=>this.newPost(this.state.owner, this.state.textoPost, this.state.foto)}>
+                            <Text style={styles.input} >Publicar posteo</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             </View>
-        );
+        )
     }
 }
 
-const styles = StyleSheet.create({
-    formContainer: {
-        paddingHorizontal: 10,
-        marginTop: 20,
-    },
-    camera: {
-        flex: 10,  // Use flex to take up available space
-        height: '100%%',  // Set the height to 50% of the available space
-        aspectRatio: 1,  // Maintain the aspect ratio of the camera preview
-        marginBottom: 10,  // Add marginBottom for spacing
-    },
-    input: {
-        height: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderStyle: 'solid',
-        borderRadius: 6,
-        marginVertical: 10,
-    },
-    button: {
-        backgroundColor: '#28a745',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        textAlign: 'center',
-        borderRadius: 4,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '#28a745',
-    },
-    textButton: {
-        color: '#fff',
-    },
-});
+const styles= StyleSheet.create ({
 
-export default PostForm;
+    posteo:{
+        fontFamily: 'Oswald, sans-serif',
+        color:'white',
+        fontWeight: 'bold',
+        fontSize: 35,
+        textAlign:'center',
+        backgroundColor:'#926F5B',
+        marginBottom: 70,
+    },
+
+    text:{
+        color:'#926F5B',
+        marginTop: 0,
+        marginBottom: '10%',
+        fontFamily: 'Raleway, sans-serif;',
+        fontSize: 25,
+        marginLeft:'0',
+        fontStyle: 'italic', 
+        border: '2px solid #926F5B',
+        borderRadius: 4 , 
+        },
+    
+    input:{
+        height: 32,
+        color:'white',
+        backgroundColor: '#D3B9AA',
+        fontFamily: 'Oswald, sans-serif',
+        fontWeight:'bold',
+        fontSize: 25,
+        textAlign: 'center',
+        marginBottom: '10%',
+    },
+    
+    title:{
+        fontFamily: 'Oswald, sans-serif',
+        color:'white',
+        fontWeight: 'bold',
+        fontSize: 35,
+        textAlign:'center',
+        backgroundColor:'#926F5B',
+        marginBottom: 15,
+        marginTop:15
+    }
+})
+
+
+
+export default NewPost;

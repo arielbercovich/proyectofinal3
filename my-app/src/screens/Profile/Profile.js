@@ -1,62 +1,59 @@
+import {Text, FlatList, View, StyleSheet, Image, TouchableOpacity, Modal} from 'react-native'
+import {auth, db} from '../../firebase/config'
+import firebase from 'firebase'
+import "firebase/auth";
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
-import { db, auth } from '../../firebase/config';
-import Post from '../../components/Post';
-import firebase from 'firebase';
-
+import Post from '../../components/Post'
+import { TextInput } from 'react-native-web';
 
 class Profile extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props){
+        super(props)
         this.state = {
-            user: [],
+            user:[],
             currentEmail: '',
-            posts: [],
-            pass: '',
-            errors: '',
+            posts:[],
             modalVisible: false,
-        };
+            pass: '',
+            errors:''
+        }
     }
 
-    componentDidMount() {
+    componentDidMount(){
         const profileEmail = this.props.route.params.email;
-        db.collection('posts')
-            .where('owner', '==', profileEmail).orderBy('createdAt', 'desc')
-            .onSnapshot((docs) => {
+
+        db.collection('posts').where('owner', '==', profileEmail).onSnapshot( 
+            docs => {
                 let posts = [];
-                docs.forEach((doc) => {
+                docs.forEach( doc => {
                     posts.push({
                         id: doc.id,
-                        data: doc.data(),
-                    });
+                        data: doc.data()
+                    })
                     this.setState({
-                        posts: posts,
-                        
-                        
-                    });
-                });
-            });
-
-        db.collection('users')
-            .where('owner', '==', profileEmail)
-            .onSnapshot((docs) => {
+                        posts: posts
+                    })
+                }) 
+            }
+        )
+        db.collection('users').where('owner', '==', profileEmail).onSnapshot(
+            docs => {
                 let user = [];
-                docs.forEach((doc) => {
+                docs.forEach( doc => {
                     user.push({
                         id: doc.id,
-                        data: doc.data(),
-                    });
+                        data: doc.data()
+                    })
                     this.setState({
-                        user: user,
-                    });
-                });
-            });
-    
-
-        
+                        user: user
+                    })
+                }) 
+            }
+        ) 
     }
-    componentDidUpdate() {
-        const profileEmail = this.state.currentEmail;
+
+    componentDidUpdate(){
+        const profileEmail = this.props.route.params.email;
 
         if (this.state.currentEmail === profileEmail) return;
     
@@ -97,40 +94,43 @@ class Profile extends Component {
             }
         ) 
     }
-    logOut() {
+    
+    logOut(){
         auth.signOut()
-            .then((res) => {
-                this.props.navigation.navigate('Login');
-            })
-            .catch((error) => console.log('error'));
-    } 
+        .then(res => {
+            this.props.navigation.navigate('Login')
+        })
+        .catch(error => console.log('error'))
+    }
+
     eliminarPerfil(){
-        if(this.state.user.length == 0){
-            console.log('')
-        }else{
-            auth.signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
-            .then(() => {
-                db.collection('users').doc(this.state.user[0].id).delete()
-                .then(()=> {
-                    const user = firebase.auth().currentUser;
-                    user.delete()
-                    this.setState({
-                        modalVisible: false
-                    })
-                    this.props.navigation.navigate('Register')
+       if(this.state.user.length == 0){
+           console.log('')
+       } else {
+        auth.signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
+        .then(() => {
+            db.collection('users')
+            .doc(this.state.user[0].id) 
+            .delete()
+            .then(() => { 
+                const user = firebase.auth().currentUser;
+                user.delete()
+                this.setState({
+                    modalVisible: false
                 })
-                .catch(error => this.setState({errors: error}))
+                this.props.navigation.navigate('Register')
             })
+            .catch(error => console.log(error))
+        })
+        .catch(error => this.setState({errors:error}))
         }
-    }   
+    }
 
-    render() {
-        console.log('posts',this.state.posts)
-
-        return (
-            <View style={styles.scroll}>
-                <Text style={styles.perfil}> PERFIL </Text>
-                <Modal
+    render(){
+        return(
+        <View style={styles.scroll}>
+            <Text style={styles.perfil}> PERFIL </Text>
+            <Modal
                 animationType="slide"
                 transparent={false}
                 visible={this.state.modalVisible}
@@ -162,152 +162,141 @@ class Profile extends Component {
                 </TouchableOpacity>
             </Modal>
 
-                {this.state.user.length === 0 ? 
-                    <Text> </Text>
-                 : 
-                    <View style={styles.container}>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.username} </Text>
-                            <Text style={styles.text}> Email: {this.state.user[0].data.owner} </Text>
-                            <Text style={styles.text}> Biografía: {this.state.user[0].data.bio} </Text>
-                        </View>
-                        <Image
-                            style={styles.foto}
-                            source={this.state.user[0].data.foto}
-                            resizeMode="cover"
-                        />
+            { this.state.user.length == 0 ?
+                <Text>  </Text> 
+                :
+                <View style={styles.container}>
+                    <View style={styles.textContainer}> 
+                        <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.userName} </Text> 
+                        <Text style={styles.text}> Email: {this.state.user[0].data.owner} </Text> 
+                        <Text style={styles.text}> Bibliografia: {this.state.user[0].data.bio} </Text> 
                     </View>
-                }
+                    <Image
+                        style={styles.foto}
+                        source={this.state.user[0].data.foto}
+                        resizeMode='cover'
+                    /> 
+                </View>
+            }
+            
+            <Text style={styles.text2}> Lista de sus {this.state.posts.length} posteos  </Text>
+            <FlatList 
+                data={this.state.posts}
+                keyExtractor={ onePost => onePost.id.toString()}
+                renderItem={ ({item}) => <Post postData={item} navigation={this.props.navigation}  />}
+            />    
 
-                <Text style={styles.text2}>Lista de sus {this.state.posts.length} posteos</Text>
-                <FlatList
-                        style={styles.posts}
-                        data={this.state.posts}
-                        keyExtractor={(onePost) => onePost.id.toString()}
-                        renderItem={({ item }) => {
-                            console.log('Item:', item); // Agrega este log para verificar los datos de cada item
-                            return <Post infoPost={item.data} navigation={this.props.navigation} />;
-  }}
-/>
-
-               
-
-
-                {this.state.user.length === 0 ? 
-                    <Text> </Text>
-                 : this.state.user[0].data.owner === auth.currentUser.email ? 
-                    <View>
-                        <TouchableOpacity style={styles.text} onPress={() => this.logOut()}>
-                            <Text style={styles.logout}>Log out</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.text} onPress={() => this.setState({modalVisible: !this.state.modalVisible})}>
-                            <Text style={styles.logout}>Eliminar Perfil</Text>
-                        </TouchableOpacity>
-                    </View>
-                 : 
-                    <Text></Text>
-                }
-            </View>
-        );
+            { this.state.user.length == 0 ?
+                <Text>  </Text> 
+                :
+                this.state.user[0].data.owner == auth.currentUser.email ?
+                <View>
+                    <TouchableOpacity style={styles.text} onPress={()=> this.logOut()} >
+                        <Text style={styles.logout}>Log out</Text>
+                    </TouchableOpacity> 
+                   
+                    <TouchableOpacity style={styles.text} onPress={()=> this.setState({ modalVisible: !this.state.modalVisible })} >
+                        <Text style={styles.logout} >Borrar perfil</Text>
+                    </TouchableOpacity> 
+                </View>
+                :
+                <Text></Text>
+            }   
+        </View>
+        )
+        
     }
 }
-const styles = StyleSheet.create({
-    scroll: {
-        flex: 2,
+const styles= StyleSheet.create ({
+    scroll:{
+        flex: 2
     },
 
-    perfil: {
+    perfil:{
         fontFamily: 'Oswald, sans-serif',
-        color: 'white',
+        color:'white',
         fontWeight: 'bold',
         fontSize: 35,
-        textAlign: 'center',
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        textAlign:'center',
+        backgroundColor:'#926F5B',
         marginBottom: 15,
-        marginTop: 15,
+        marginTop:15
     },
 
-    text: {
+    text:{
         fontFamily: 'Oswald, sans-serif',
-        color: 'white',
+        color:'white',
         fontSize: 20,
         flexDirection: 'column',
     },
 
-    text2: {
-        backgroundColor: 'white',
-        color: 'black',
+    text2:{
+        backgroundColor:'#D3B9AA',
+        color: 'white',
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 18,
         textAlign: 'center',
-        fontWeight: 'bold',
+        fontWeight: 'bold',  
     },
 
-    foto: {
-        height: 75,
-        width: 75,
+    foto:{
+        height:75,
+        width:75,
         marginTop: 10,
-        borderRadius: 50,
+        borderRadius:'50%',
         padding: 5,
     },
 
-    container: {
+    container:{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection:'row',
         width: '100%',
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        backgroundColor:'#926F5B',
     },
 
-    textContainer: {
-        flexDirection: 'wrap',
+    textContainer:{
+        flexDirection:'wrap',
         marginTop: 20,
     },
 
-    logout: {
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+    logout:{
+        backgroundColor: '#946F5B',
         marginTop: 10,
         textAlign: 'center',
         fontFamily: 'Raleway, sans-serif;',
-        fontSize: 20,
+        fontSize:20,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'white'
     },
 
-    inputModal: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
-        borderWidth: 2,
-        borderColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
-        borderRadius: 4,
+    inputModal:{
+        color:'#926F5B',
+        border: '2px solid #926F5B',
+        borderRadius:4 ,
         fontFamily: 'Raleway, sans-serif;',
-        fontSize: 18,
-        marginLeft: 0,
-        fontStyle: 'italic',
+        fontSize:18,
+        marginLeft:'0',
+        fontStyle: 'italic', 
     },
 
-    textModal: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
-        fontSize: 20,
+    textModal:{
+        color:'#926F5B',
+        fontSize:20,
         fontWeight: 'bold',
-        marginRight: '40%',
-        width: '100%',
+        marginRight:'40%',
+        width:"100%",
         fontFamily: 'Oswald, sans-serif',
-        borderRadius: 4,
-        marginTop: 10,
+        borderRadius:4,
+        marginTop: 10
     },
 
-    notificacion: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+    notificacion:{
+        color:'#926F5B',
         marginTop: '15%',
         fontFamily: 'Raleway, sans-serif;',
-        fontSize: 20,
-        marginLeft: 0,
+        fontSize:20,
+        marginLeft:'0',
     },
-    posts:{
-        textAlign: 'center',
-        padding: 10,
-        backgroundColor: 'white',
-        },
-  
-});
+})
 
 export default Profile
