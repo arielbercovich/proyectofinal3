@@ -149,4 +149,4 @@ const styles= StyleSheet.create ({
     }
 })
 
-export default MyCamera;
+export default MyCamera
