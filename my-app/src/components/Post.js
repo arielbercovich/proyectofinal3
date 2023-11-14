@@ -19,8 +19,7 @@ class Post extends Component {
 
     componentDidMount() {
         const { infoPost, id } = this.props;
-
-        console.log('prueba', this.props.infoPost);
+        if(infoPost){
 
         this.props.infoPost && this.props.infoPost.datos && this.props.infoPost.datos.likes && this.props.infoPost.datos.likes.length > 0
             ? this.setState({
@@ -30,21 +29,24 @@ class Post extends Component {
             : null;
 
         this.getComentarios(this.props.infoid);
+        }
       
     }
     
 
     getComentarios(postId) {
-        db.collection('posts').onSnapshot((querySnapshot) => { // querySnapshot --> objeto con resultados de busqueda
-            querySnapshot.forEach((doc) => {
-                doc.id === postId
-                    ? this.setState({
+        db.collection('posts').doc(postId).get()
+            .then(doc => {
+                if (doc.exists) {
+                    this.setState({
                         arrayComentarios: doc.data().comentarios || []
-                    })
-                    : null;
-            });
-        });
+                    });
+                }
+            })
+            .catch(error => console.log(error));
     }
+
+    
 
     likear() {
         const { infoPost } = this.props;
@@ -99,20 +101,26 @@ class Post extends Component {
         });
       }
 
-    render() {
+      render() {
         const { infoPost, navigation } = this.props;
         const { cantidadDeLikes, like } = this.state;
     
+        console.log('infoPost:', infoPost);
+    
         return (
             <View style={styles.container}>
-                {infoPost && infoPost.datos ? (
+                {infoPost ? (
                     <React.Fragment>
-                        <Image style={styles.foto} source={{uri: infoPost.datos.fotoUrl}} resizeMode='cover'/>
-                        <Text style={styles.ownerText}>Publicado por: {infoPost.datos.owner}</Text>
-                        <Text style={styles.postText}>{infoPost.datos.textoPost}</Text>
+                        <Image
+                            style={styles.foto}
+                            source={{ uri: infoPost.fotoUrl || '' }}
+                            resizeMode='cover'
+                        />
+                        <Text style={styles.ownerText}>Publicado por: {infoPost.owner}</Text>
+                        <Text style={styles.postText}>{infoPost.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
-                        {infoPost.datos.fotoUrl && (
-                            <Image style={styles.foto} source={{ uri: infoPost.datos.fotoUrl }} resizeMode='cover' />
+                        {infoPost.fotoUrl && (
+                            <Image style={styles.foto} source={{ uri: infoPost.fotoUrl }} resizeMode='cover' />
                         )}
                         {like ? (
                             <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
@@ -127,17 +135,22 @@ class Post extends Component {
                         )}
                         <TouchableOpacity
                             style={styles.commentsButton}
-                            onPress={() => this.props.propsNavegacion.navigate('Comentario', { postId: infoPost.id })}
+                            onPress={() => navigation.navigate('Comentario', { postId: infoPost.id })}
                         >
                             <Text style={styles.commentsButtonText}>Ver Comentarios</Text>
                         </TouchableOpacity>
                     </React.Fragment>
                 ) : (
-                    <Text style={styles.errorText}>Error: No se encontraron datos del post.</Text>
+                    <React.Fragment>
+                        <Text>Cargando...</Text>
+                        <Text style={styles.errorText}>Error: No se encontraron datos del post.</Text>
+                    </React.Fragment>
                 )}
             </View>
         );
     }
+    
+    
 }
     
 const styles = StyleSheet.create({

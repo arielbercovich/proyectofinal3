@@ -54,10 +54,8 @@ class Profile extends Component {
 
         
     }
-    
-
     componentDidUpdate() {
-        const profileEmail = this.props.route.params.email;
+        const profileEmail = this.state.currentEmail;
 
         if (this.state.currentEmail === profileEmail) return;
     
@@ -98,10 +96,6 @@ class Profile extends Component {
             }
         ) 
     }
-    
-
-    
-
     logOut() {
         auth.signOut()
             .then((res) => {
@@ -130,6 +124,8 @@ class Profile extends Component {
     }   
 
     render() {
+        console.log('posts',this.state.posts)
+
         return (
             <View style={styles.scroll}>
                 <Text style={styles.perfil}> PERFIL </Text>
@@ -184,11 +180,15 @@ class Profile extends Component {
 
                 <Text style={styles.text2}>Lista de sus {this.state.posts.length} posteos</Text>
                 <FlatList
-                        style = {styles.posts}
+                        style={styles.posts}
                         data={this.state.posts}
                         keyExtractor={(onePost) => onePost.id.toString()}
-                        renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}
-                    />
+                        renderItem={({ item }) => {
+                            console.log('Item:', item); // Agrega este log para verificar los datos de cada item
+                            return <Post infoPost={item.data} navigation={this.props.navigation} />;
+  }}
+/>
+
                
 
 
