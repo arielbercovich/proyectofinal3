@@ -51,9 +51,11 @@ class Home extends Component {
                 ) : (
                     <FlatList
                         data={this.state.listaPost}
-                        keyExtractor={(unPost) => unPost.id}
-                        renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item} />}
+                        keyExtractor={(unPost) => unPost.id.toString()}
+                        renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
                     />
+
+
                 )}
                 <TouchableOpacity
                     style={styles.buttonContainer}
