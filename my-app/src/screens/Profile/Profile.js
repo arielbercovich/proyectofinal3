@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import Post from '../../components/Post';
+import firebase from 'firebase';
 
 
 class Profile extends Component {

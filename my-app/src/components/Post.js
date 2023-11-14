@@ -119,9 +119,7 @@ class Post extends Component {
                         <Text style={styles.ownerText}>Publicado por: {infoPost.owner}</Text>
                         <Text style={styles.postText}>{infoPost.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
-                        {infoPost.fotoUrl && (
-                            <Image style={styles.foto} source={{ uri: infoPost.fotoUrl }} resizeMode='cover' />
-                        )}
+                        
                         {like ? (
                             <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
                                 <AntDesign name="heart" size={24} color="red" />
