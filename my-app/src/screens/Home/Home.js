@@ -42,7 +42,9 @@ class Home extends Component {
         return (
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>HOME</Text>
+                <Text style={styles.title}>HOME 🏠</Text>
+                    <Text style={styles.title}>rubrober.com </Text>
+
                     <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                         <Text style={styles.logoutButtonText}>Logout</Text>
                     </TouchableOpacity>
@@ -52,16 +54,15 @@ class Home extends Component {
                     <Text style={styles.loadingText}>Cargando...</Text>
                 ) : (
                     <FlatList
-                            data={this.state.listaPost}
-                            keyExtractor={(unPost) => unPost.id.toString()}
-                            renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
+                        data={this.state.listaPost}
+                        keyExtractor={(unPost) => unPost.id.toString()}
+                        renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
                     />
                 )}
                 <TouchableOpacity
                     style={styles.addButton}
                     onPress={() => this.props.navigation.navigate('Comentarios')}
                 >
-
                 </TouchableOpacity>
             </ScrollView>
         );
@@ -124,3 +125,4 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
