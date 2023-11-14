@@ -12,27 +12,24 @@ class Post extends Component {
             cantidadDeLikes: 0,
             showCamera: true,
             arrayComentarios: [],
-            showModal: false
-            
+            showModal: false,
+            comentario: '', // Nuevo estado para almacenar el comentario
         };
     }
 
     componentDidMount() {
         const { infoPost, id } = this.props;
-        if(infoPost){
+        if (infoPost) {
+            this.props.infoPost && this.props.infoPost.datos && this.props.infoPost.datos.likes && this.props.infoPost.datos.likes.length > 0
+                ? this.setState({
+                    like: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
+                    cantidadDeLikes: this.props.infoPost.datos.likes.length
+                })
+                : null;
 
-        this.props.infoPost && this.props.infoPost.datos && this.props.infoPost.datos.likes && this.props.infoPost.datos.likes.length > 0
-            ? this.setState({
-                like: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
-                cantidadDeLikes: this.props.infoPost.datos.likes.length
-            })
-            : null;
-
-        this.getComentarios(this.props.infoid);
+            this.getComentarios(this.props.infoid);
         }
-      
     }
-    
 
     getComentarios(postId) {
         db.collection('posts').doc(postId).get()
@@ -46,8 +43,6 @@ class Post extends Component {
             .catch(error => console.log(error));
     }
 
-    
-
     likear() {
         const { infoPost } = this.props;
 
@@ -55,10 +50,11 @@ class Post extends Component {
             ? db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
-                .then(res => {console.log(infoPost);
+                .then(res => {
+                    console.log(infoPost);
                     this.setState({
                         like: true,
-                        cantidadDeLikes: this.state.cantidadDeLikes+1
+                        cantidadDeLikes: this.state.cantidadDeLikes + 1
                     });
                 })
                 .catch(e => console.log(e))
@@ -75,38 +71,62 @@ class Post extends Component {
                 .then(res => {
                     this.setState({
                         like: false,
-                        cantidadDeLikes: this.state.cantidadDeLikes-1
+                        cantidadDeLikes: this.state.cantidadDeLikes - 1
                     });
                 })
                 .catch(e => console.log(e))
             : null;
     }
+
     deletePost() {
         db.collection("posts")
-          .doc(this.props.infoPost.id)
-          .delete()
-          .then(() => {
-            console.log("Document successfully deleted!");
-          });
-      }
-      showModal() {
-        this.setState({
-          showModal: true,
-        });
-      }
-    
-      closeModal() {
-        this.setState({
-          showModal: false,
-        });
-      }
+            .doc(this.props.infoPost.id)
+            .delete()
+            .then(() => {
+                console.log("Document successfully deleted!");
+            });
+    }
 
-      render() {
+    showModal() {
+        this.setState({
+            showModal: true,
+        });
+    }
+
+    closeModal() {
+        this.setState({
+            showModal: false,
+        });
+    }
+
+    agregarComentario() {
+        const { infoPost } = this.props;
+        const { comentario } = this.state;
+    
+        if (comentario.trim() !== '') {
+            db.collection('posts').doc(infoPost.id).update({
+                comentarios: firebase.firestore.FieldValue.arrayUnion({
+                    usuario: auth.currentUser.email,
+                    texto: comentario
+                })
+            })
+                .then(() => {
+                    this.setState({
+                        comentario: '' // Limpiar el campo de comentario después de agregarlo
+                    });
+                    this.getComentarios(infoPost.id); // Actualizar la lista de comentarios
+                })
+                .catch(e => console.log(e));
+        }
+    }
+    
+
+    render() {
         const { infoPost, navigation } = this.props;
-        const { cantidadDeLikes, like } = this.state;
-    
+        const { cantidadDeLikes, like, arrayComentarios, comentario } = this.state;
+
         console.log('infoPost:', infoPost);
-    
+
         return (
             <View style={styles.container}>
                 {infoPost ? (
@@ -119,7 +139,7 @@ class Post extends Component {
                         <Text style={styles.ownerText}>Publicado por: {infoPost.owner}</Text>
                         <Text style={styles.postText}>{infoPost.textoPost}</Text>
                         <Text style={styles.likesText}>{cantidadDeLikes} Likes</Text>
-                        
+
                         {like ? (
                             <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
                                 <AntDesign name="heart" size={24} color="red" />
@@ -131,6 +151,35 @@ class Post extends Component {
                                 <Text style={styles.likeButtonText}> Like</Text>
                             </TouchableOpacity>
                         )}
+
+                        {/* Agrega el TextInput para ingresar comentarios */}
+                        <TextInput
+                            style={styles.comentarioInput}
+                            placeholder="Deja un comentario..."
+                            value={comentario}
+                            onChangeText={(text) => this.setState({ comentario: text })}
+                        />
+
+                        {/* Agrega el botón para agregar comentarios */}
+                        <TouchableOpacity
+                            style={styles.agregarComentarioButton}
+                            onPress={() => this.agregarComentario()}
+                        >
+                            <Text style={styles.agregarComentarioButtonText}>Agregar Comentario</Text>
+                        </TouchableOpacity>
+
+                        {/* Lista de comentarios */}
+                        <FlatList
+                            data={arrayComentarios}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <View style={styles.comentarioContainer}>
+                                    <Text style={styles.comentarioUsuario}>{item.usuario}:</Text>
+                                    <Text style={styles.comentarioTexto}>{item.texto}</Text>
+                                </View>
+                            )}
+                        />
+
                         <TouchableOpacity
                             style={styles.commentsButton}
                             onPress={() => navigation.navigate('Comentario', { postId: infoPost.id })}
@@ -147,10 +196,8 @@ class Post extends Component {
             </View>
         );
     }
-    
-    
 }
-    
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
@@ -190,6 +237,34 @@ const styles = StyleSheet.create({
     likeButtonText: {
         marginLeft: 5,
     },
+    comentarioInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 8,
+        marginBottom: 10,
+    },
+    agregarComentarioButton: {
+        backgroundColor: 'lightblue',
+        borderRadius: 5,
+        padding: 8,
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    agregarComentarioButtonText: {
+        color: 'black',
+    },
+    comentarioContainer: {
+        flexDirection: 'row',
+        marginBottom: 5,
+    },
+    comentarioUsuario: {
+        fontWeight: 'bold',
+        marginRight: 5,
+    },
+    comentarioTexto: {
+        flex: 1,
+    },
     commentsButton: {
         backgroundColor: 'lightgray',
         borderRadius: 5,
@@ -204,8 +279,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 10,
     },
-    
 });
 
 export default Post;
+
 

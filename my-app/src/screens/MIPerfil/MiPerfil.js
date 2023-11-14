@@ -107,7 +107,7 @@ class MiPerfil extends Component {
                         </View>
                         <Image
                             style={styles.foto}
-                            source={{ uri: this.state.user.data.foto }} // Supongo que el campo 'foto' es una URL
+                            source={{ uri: this.state.user.data.foto }} 
                             resizeMode="cover"
                         />
                     </View>

@@ -30,6 +30,7 @@ class PostForm extends Component {
                 textoPost: textoPost,
                 fotoUrl: fotoUrl,
                 likes: [],
+                comentario: [],
                 createdAt: createdAt,
             })
             .then((res) => {
