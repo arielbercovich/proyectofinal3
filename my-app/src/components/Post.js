@@ -45,9 +45,9 @@ class Post extends Component {
 
     likear() {
         const { infoPost } = this.props;
-
-        infoPost && infoPost.data
-            ? db.collection('posts').doc(infoPost.id).update({
+    
+        if (infoPost && infoPost.id) {
+            db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
                 .then(res => {
@@ -57,15 +57,17 @@ class Post extends Component {
                         cantidadDeLikes: this.state.cantidadDeLikes + 1
                     });
                 })
-                .catch(e => console.log(e))
-            : null;
+                .catch(e => console.log(e));
+        } else {
+            console.log('Invalid infoPost data or missing document ID');
+        }
     }
-
+    
     unLike() {
         const { infoPost } = this.props;
-
-        infoPost && infoPost.data
-            ? db.collection('posts').doc(infoPost.id).update({
+    
+        if (infoPost && infoPost.id) {
+            db.collection('posts').doc(infoPost.id).update({
                 likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
             })
                 .then(res => {
@@ -74,9 +76,12 @@ class Post extends Component {
                         cantidadDeLikes: this.state.cantidadDeLikes - 1
                     });
                 })
-                .catch(e => console.log(e))
-            : null;
+                .catch(e => console.log(e));
+        } else {
+            console.log('Invalid infoPost data or missing document ID');
+        }
     }
+    
 
     deletePost() {
         db.collection("posts")
@@ -103,13 +108,16 @@ class Post extends Component {
         const { infoPost } = this.props;
         const { comentario } = this.state;
     
-        if (comentario.trim() !== '') {
-            db.collection('posts').doc(infoPost.id).update({
-                comentarios: firebase.firestore.FieldValue.arrayUnion({
-                    usuario: auth.currentUser.email,
-                    texto: comentario
+        if (infoPost && infoPost.id) {
+            console.log('adding comment to post with id:', infoPost.id);
+    
+            if (comentario.trim() !== '') {
+                db.collection('posts').doc(infoPost.id).update({
+                    comentarios: firebase.firestore.FieldValue.arrayUnion({
+                        usuario: auth.currentUser.email,
+                        texto: comentario
+                    })
                 })
-            })
                 .then(() => {
                     this.setState({
                         comentario: '' // Limpiar el campo de comentario después de agregarlo
@@ -117,6 +125,9 @@ class Post extends Component {
                     this.getComentarios(infoPost.id); // Actualizar la lista de comentarios
                 })
                 .catch(e => console.log(e));
+            }
+        } else {
+            console.log('Invalid infoPost data or missing document ID');
         }
     }
     

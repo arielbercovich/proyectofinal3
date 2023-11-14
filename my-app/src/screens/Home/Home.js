@@ -50,10 +50,11 @@ class Home extends Component {
                     <Text>Cargando...</Text>
                 ) : (
                     <FlatList
-                        data={this.state.listaPost}
-                        keyExtractor={(unPost) => unPost.id.toString()}
-                        renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
+                            data={this.state.listaPost}
+                            keyExtractor={(unPost) => unPost.id.toString()}
+                            renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
                     />
+
 
 
                 )}
