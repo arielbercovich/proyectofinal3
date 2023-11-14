@@ -63,8 +63,7 @@ class Search extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>BUSCADOR 🔍</Text>
-          <Text style={styles.title}>rubrober.com</Text>
+          <Text style={styles.title}>BUSCADOR </Text>
           <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
