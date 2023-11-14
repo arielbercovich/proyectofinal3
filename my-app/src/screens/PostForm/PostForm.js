@@ -22,8 +22,7 @@ class PostForm extends Component {
     }
 
     crearPost(owner, textoPost, fotoUrl, createdAt) {
-        //const { photo } = this.state; // Obtén la foto capturada
-        // Crear la colección 'posts' con los datos del post y la foto si está presente
+
         db.collection('posts')
             .add({
                 owner: owner,

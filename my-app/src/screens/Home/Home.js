@@ -41,53 +41,86 @@ class Home extends Component {
         console.log(this.state.listaPost);
         return (
             <ScrollView contentContainerStyle={styles.container}>
-                <Text>HOME</Text>
-                <TouchableOpacity onPress={() => this.logout()}>
-                    <Text>Logout</Text>
-                </TouchableOpacity>
-                <Text>Lista de Posts</Text>
+                <View style={styles.header}>
+                    <Text style={styles.title}>HOME</Text>
+                    <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
+                        <Text style={styles.logoutButtonText}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.sectionTitle}>Lista de Posts</Text>
                 {this.state.listaPost.length === 0 ? (
-                    <Text>Cargando...</Text>
+                    <Text style={styles.loadingText}>Cargando...</Text>
                 ) : (
                     <FlatList
                             data={this.state.listaPost}
                             keyExtractor={(unPost) => unPost.id.toString()}
                             renderItem={({ item }) => <Post propsNavegacion={this.props.navigation} infoPost={item.datos} />}
                     />
-
-
-
                 )}
                 <TouchableOpacity
-                    style={styles.buttonContainer}
+                    style={styles.addButton}
                     onPress={() => this.props.navigation.navigate('Comentarios')}
                 >
+
                 </TouchableOpacity>
             </ScrollView>
         );
-    }}
+    }
+}
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: 'white',
+        flex: 1,
+        backgroundColor: '#f8f8f8',
     },
-
-    flatList: {
+    header: {
+        flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#3498db',
     },
-
-    touchable: {
-        padding: 4,
-        backgroundColor: '#ccc',
-        marginBottom: 10,
-        borderRadius: 4,
-    },
-
-    touchableText: {
+    title: {
+        fontSize: 24,
         fontWeight: 'bold',
-    }
+        color: 'white',
+    },
+    logoutButton: {
+        backgroundColor: '#e74c3c',
+        padding: 10,
+        borderRadius: 5,
+    },
+    logoutButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        margin: 15,
+        color: '#333',
+    },
+    loadingText: {
+        textAlign: 'center',
+        marginTop: 20,
+        color: '#555',
+    },
+    addButton: {
+        backgroundColor: '#3498db',
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButtonIcon: {
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
 });
 
 export default Home;

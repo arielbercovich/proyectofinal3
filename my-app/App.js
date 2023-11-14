@@ -11,6 +11,7 @@ import MiPerfil from './src/screens/MIPerfil/MiPerfil';
 import Comments from './src/screens/Comentarios/Comentario';
 
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
       <Stack.Screen name='Comentario' component={Comments} options={ { headerShown: false } }/>
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="MiPerfil" component={MiPerfil} />
+
 
 
       {/* Si implementamos tabnavigation para el resto de la app. El tercer componente debe ser una navegación que tenga a Home como primer screen */}

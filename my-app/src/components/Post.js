@@ -13,123 +13,118 @@ class Post extends Component {
             showCamera: true,
             arrayComentarios: [],
             showModal: false,
-            comentario: '', // Nuevo estado para almacenar el comentario
+            comentario: ''
         };
     }
 
     componentDidMount() {
         const { infoPost, id } = this.props;
-        if (infoPost) {
-            this.props.infoPost && this.props.infoPost.datos && this.props.infoPost.datos.likes && this.props.infoPost.datos.likes.length > 0
+        infoPost && 
+            (this.props.infoPost &&
+            this.props.infoPost.datos &&
+            this.props.infoPost.datos.likes &&
+            this.props.infoPost.datos.likes.length > 0
                 ? this.setState({
                     like: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
                     cantidadDeLikes: this.props.infoPost.datos.likes.length
-                })
-                : null;
-
-            this.getComentarios(this.props.infoid);
-        }
+                }): null);
+    
+        this.getComentarios(infoPost && infoPost.id);
     }
-
+    
     getComentarios(postId) {
-        db.collection('posts').doc(postId).get()
-            .then(doc => {
-                if (doc.exists) {
-                    this.setState({
-                        arrayComentarios: doc.data().comentarios || []
-                    });
-                }
-            })
-            .catch(error => console.log(error));
+        postId &&
+            db.collection('posts').doc(postId).get()
+                .then(
+                    (doc) =>
+                        doc.exists &&
+                        this.setState({
+                            arrayComentarios: doc.data().comentarios || []
+                        })
+                )
+                .catch((error) => console.log(error));
     }
-
+    
     likear() {
         const { infoPost } = this.props;
     
-        if (infoPost && infoPost.id) {
-            db.collection('posts').doc(infoPost.id).update({
-                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-            })
-                .then(res => {
-                    console.log(infoPost);
-                    this.setState({
-                        like: true,
-                        cantidadDeLikes: this.state.cantidadDeLikes + 1
-                    });
-                })
-                .catch(e => console.log(e));
-        } else {
-            console.log('Invalid infoPost data or missing document ID');
-        }
+        infoPost && infoPost.id
+            ? db.collection('posts').doc(infoPost.id)
+                  .update({
+                      likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+                  })
+                  .then((res) => {
+                      console.log(infoPost);
+                      this.setState({
+                          like: true,
+                          cantidadDeLikes: this.state.cantidadDeLikes + 1
+                      });
+                  })
+                  .catch((e) => console.log(e))
+            : console.log('error');
     }
     
     unLike() {
         const { infoPost } = this.props;
     
-        if (infoPost && infoPost.id) {
-            db.collection('posts').doc(infoPost.id).update({
-                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-            })
-                .then(res => {
-                    this.setState({
-                        like: false,
-                        cantidadDeLikes: this.state.cantidadDeLikes - 1
-                    });
-                })
-                .catch(e => console.log(e));
-        } else {
-            console.log('Invalid infoPost data or missing document ID');
-        }
+        infoPost && infoPost.id
+            ? db.collection('posts').doc(infoPost.id)
+                  .update({
+                      likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+                  })
+                  .then((res) => {
+                      this.setState({
+                          like: false,
+                          cantidadDeLikes: this.state.cantidadDeLikes - 1
+                      });
+                  })
+                  .catch((e) => console.log(e))
+            : console.log('invalido');
     }
     
-
     deletePost() {
-        db.collection("posts")
-            .doc(this.props.infoPost.id)
-            .delete()
-            .then(() => {
-                console.log("Document successfully deleted!");
-            });
+        this.props.infoPost &&
+            db.collection('posts').doc(this.props.infoPost.id)
+                .delete()
+                .then(() => console.log('Eliminado correctamente'));
     }
-
+    
     showModal() {
         this.setState({
-            showModal: true,
+            showModal: true
         });
     }
-
+    
     closeModal() {
         this.setState({
-            showModal: false,
+            showModal: false
         });
     }
-
+    
     agregarComentario() {
         const { infoPost } = this.props;
         const { comentario } = this.state;
     
-        if (infoPost && infoPost.id) {
-            console.log('adding comment to post with id:', infoPost.id);
-    
-            if (comentario.trim() !== '') {
-                db.collection('posts').doc(infoPost.id).update({
-                    comentarios: firebase.firestore.FieldValue.arrayUnion({
-                        usuario: auth.currentUser.email,
-                        texto: comentario
-                    })
-                })
-                .then(() => {
-                    this.setState({
-                        comentario: '' // Limpiar el campo de comentario después de agregarlo
-                    });
-                    this.getComentarios(infoPost.id); // Actualizar la lista de comentarios
-                })
-                .catch(e => console.log(e));
-            }
-        } else {
-            console.log('Invalid infoPost data or missing document ID');
-        }
+        infoPost && infoPost.id
+            ? comentario.trim() !== ''
+                  ? db.collection('posts').doc(infoPost.id)
+                        .update({
+                            comentarios: firebase.firestore.FieldValue.arrayUnion({
+                                usuario: auth.currentUser.email,
+                                texto: comentario
+                            })
+                        })
+                        .then(() => {
+                            this.setState({
+                                comentario: ''
+                            });
+                            this.getComentarios(infoPost.id);
+                        })
+                        .catch((e) => console.log(e))
+                  : null
+            : console.log('Invalido');
     }
+    
     
 
     render() {
@@ -256,7 +251,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     agregarComentarioButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: 'lightgreen',
         borderRadius: 5,
         padding: 8,
         alignItems: 'center',
@@ -277,7 +272,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     commentsButton: {
-        backgroundColor: 'lightgray',
+        backgroundColor: 'lightblue',
         borderRadius: 5,
         padding: 10,
     },
