@@ -103,28 +103,6 @@ class Profile extends Component {
         .catch((error) => console.log('error'))
     }
 
-    eliminarPerfil(){
-       if(this.state.user.length == 0){
-           console.log('')
-       } else {
-        auth.signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
-        .then(() => {
-            db.collection('users')
-            .doc(this.state.user[0].id) 
-            .delete()
-            .then(() => { 
-                const user = firebase.auth().currentUser;
-                user.delete()
-                this.setState({
-                    modalVisible: false
-                })
-                this.props.navigation.navigate('Register')
-            })
-            .catch(error => console.log(error))
-        })
-        .catch(error => this.setState({errors:error}))
-        }
-    }
 
     render(){
         return(
@@ -149,13 +127,7 @@ class Profile extends Component {
                     value={this.state.pass}
                 />  
                     
-                { this.state.errors == '' ?
-                    <TouchableOpacity  style={styles.text} onPress={() => this.eliminarPerfil()}>
-                        <Text style={styles.logout}>Borrar perfil</Text>
-                    </TouchableOpacity>
-                    :
-                    <Text style={styles.notificacion}>{this.state.errors.message}</Text>
-                }
+        
 
                 <TouchableOpacity onPress={() => this.setState({ modalVisible: !this.state.modalVisible })}>
                     <Text style={styles.logout}>Cancelar</Text>
@@ -167,9 +139,9 @@ class Profile extends Component {
                 :
                 <View style={styles.container}>
                     <View style={styles.textContainer}> 
-                        <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.userName} </Text> 
+                        <Text style={styles.text}> Nombre de usuario: {this.state.user[0].data.username} </Text> 
                         <Text style={styles.text}> Email: {this.state.user[0].data.owner} </Text> 
-                        <Text style={styles.text}> Bibliografia: {this.state.user[0].data.bio} </Text> 
+                        <Text style={styles.text}> Biografía: {this.state.user[0].data.bio} </Text> 
                     </View>
                     <Image
                         style={styles.foto}

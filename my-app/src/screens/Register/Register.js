@@ -15,7 +15,6 @@ class Register extends Component {
     }
 
     componentDidMount() {
-        console.log("chequear que este logueado en firebase");
         auth.onAuthStateChanged(user => {
             console.log(user)
             if (user) {
