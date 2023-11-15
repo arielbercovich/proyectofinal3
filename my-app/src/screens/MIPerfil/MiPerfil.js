@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 35,
         textAlign: 'center',
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        backgroundColor: '#4CAF50', // Verde oscuro
         marginBottom: 15,
         marginTop: 15,
     },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        backgroundColor: '#4CAF50', // Verde oscuro
     },
 
     textContainer: {
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
 
     logout: {
-        backgroundColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        backgroundColor: '#4CAF50', // Verde oscuro
         marginTop: 10,
         textAlign: 'center',
         fontFamily: 'Raleway, sans-serif;',
@@ -220,9 +220,9 @@ const styles = StyleSheet.create({
     },
 
     inputModal: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        color: '#4CAF50', // Verde oscuro
         borderWidth: 2,
-        borderColor: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        borderColor: '#4CAF50', // Verde oscuro
         borderRadius: 4,
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 18,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     },
 
     textModal: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        color: '#4CAF50', // Verde oscuro
         fontSize: 20,
         fontWeight: 'bold',
         marginRight: '40%',
@@ -242,18 +242,20 @@ const styles = StyleSheet.create({
     },
 
     notificacion: {
-        color: '#4CAF50', // Cambiado a verde similar al 'liked' en el Search
+        color: '#4CAF50', // Verde oscuro
         marginTop: '15%',
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 20,
         marginLeft: 0,
     },
-    posts:{
+    
+    posts: {
         textAlign: 'center',
         padding: 10,
         backgroundColor: 'white',
-        },
-  
+    },
 });
+
+
 
 export default MiPerfil

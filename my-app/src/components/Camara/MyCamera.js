@@ -107,46 +107,53 @@ const styles= StyleSheet.create ({
         marginTop:50
     },
 
-    button:{
-        height: '5vh',
-        width:'100vw',
+ button: {
+        height: '5%',
+        width: '100%',
         padding: 5,
         marginTop: 10,
+        backgroundColor: '#4CAF50', // Verde oscuro
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
     },
 
-    boton:{
-        height: '5vh',
+    boton: {
+        height: '5%',
         padding: 5,
         marginTop: 20,
-        backgroundColor: '#946F5B',
+        backgroundColor: '#007BFF', // Azul vibrante
         textAlign: 'center',
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize:20,
+        fontFamily: 'Raleway, sans-serif',
+        fontSize: 20,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+        borderRadius: 5,
     },
 
-    preview:{
-        height:'45vh',
-        marginTop:50
+    preview: {
+        height: '45%',
+        marginTop: 50,
     },
 
-    sacar:{
-        backgroundColor: '#946F5B',
+    sacar: {
+        backgroundColor: '#4CAF50', // Verde oscuro
         marginTop: 10,
         textAlign: 'center',
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize:20,
+        fontFamily: 'Raleway, sans-serif',
+        fontSize: 20,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+        borderRadius: 5,
+        paddingVertical: 10,
     },
 
-    text:{
-        marginTop:20,
+    text: {
+        marginTop: 20,
         fontWeight: 'bold',
-        color:'#926F5B',
-        fontFamily: 'Raleway, sans-serif;'
-    }
-})
+        color: '#007BFF', // Azul vibrante
+        fontFamily: 'Raleway, sans-serif',
+    },
+});
 
-export default MyCamera
+export default MyCamera;

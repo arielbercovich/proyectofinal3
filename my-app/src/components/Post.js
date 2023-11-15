@@ -133,93 +133,93 @@ class Post extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    marginVertical: 10,
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    container: {
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      marginVertical: 10,
+      borderRadius: 10,
+      padding: 10,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  foto: {
-    height: 400,
-    width: '100%',
-    borderRadius: 10,
-  },
-  text: {
-    marginTop: 10,
-    fontSize: 18,
-    color: '#4CAF50',
-    fontFamily: 'Arial, sans-serif',
-  },
-  text2: {
-    color: '#4CAF50',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    width: '100%',
-    fontFamily: 'Arial, sans-serif',
-  },
-  textComent: {
-    color: '#4CAF50',
-    fontSize: 16,
-    marginBottom: 5,
-    fontFamily: 'Arial, sans-serif',
-  },
-  textComent2: {
-    color: '#4CAF50',
-    fontSize: 16,
-    fontStyle: 'italic',
-    fontFamily: 'Arial, sans-serif',
-  },
-  textComent3: {
-    color: '#4CAF50',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    fontFamily: 'Arial, sans-serif',
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  icon: {
-    marginHorizontal: 10,
-  },
-  textLike: {
-    color: '#4CAF50',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 5,
-    fontFamily: 'Arial, sans-serif',
-  },
-  agregar: {
-    color: '#4CAF50',
-    textDecorationLine: 'underline',
-    marginTop: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'Arial, sans-serif',
-  },
-  borrar: {
-    marginTop: 10,
-    backgroundColor: '#4CAF50',
-    fontSize: 18,
-    color: 'white',
-    padding: 8,
-    borderRadius: 5,
-    fontFamily: 'Arial, sans-serif',
-  },
-});
-
-export default Post;
+    foto: {
+      height: 400,
+      width: '100%',
+      borderRadius: 10,
+    },
+    text: {
+      marginTop: 10,
+      fontSize: 18,
+      color: '#4CAF50',
+      fontFamily: 'Arial, sans-serif',
+    },
+    text2: {
+      color: '#4CAF50',
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      width: '100%',
+      fontFamily: 'Arial, sans-serif',
+    },
+    textComent: {
+      color: '#4CAF50',
+      fontSize: 16,
+      marginBottom: 5,
+      fontFamily: 'Arial, sans-serif',
+    },
+    textComent2: {
+      color: '#4CAF50',
+      fontSize: 16,
+      fontStyle: 'italic',
+      fontFamily: 'Arial, sans-serif',
+    },
+    textComent3: {
+      color: '#4CAF50',
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      fontFamily: 'Arial, sans-serif',
+    },
+    iconContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    icon: {
+      marginHorizontal: 10,
+    },
+    textLike: {
+      color: '#4CAF50',
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginVertical: 5,
+      fontFamily: 'Arial, sans-serif',
+    },
+    agregar: {
+      color: '#4CAF50',
+      textDecorationLine: 'underline',
+      marginTop: 10,
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      fontFamily: 'Arial, sans-serif',
+    },
+    borrar: {
+      marginTop: 10,
+      backgroundColor: '#4CAF50',
+      fontSize: 18,
+      color: 'white',
+      padding: 8,
+      borderRadius: 5,
+      fontFamily: 'Arial, sans-serif',
+    },
+  });
+  
+  export default Post;
