@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {auth, db} from '../../firebase/config';
-import {Text, View, FlatList, StyleSheet} from 'react-native'
+import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
 import Post from '../../components/Post'
 
 class Home extends Component{
@@ -27,12 +27,20 @@ class Home extends Component{
             }
         )
     }
+    logout(){
+        auth.signOut();
+         //Redirigir al usuario a la home del sitio.
+        this.props.navigation.navigate('Login')
+    }
 
 
     render(){
         return(
             <>
                 <Text style={styles.text}> HOME </Text>
+                <TouchableOpacity onPress={()=>this.logout()}>
+                    <Text>Logout</Text>
+                </TouchableOpacity>
                 <FlatList 
                     data={this.state.posts}
                     keyExtractor={ onePost => onePost.id.toString()}

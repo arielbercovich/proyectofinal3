@@ -54,14 +54,10 @@ class Search extends Component {
     });
   }
 
-  logout() {
-    auth.signOut();
-    this.props.navigation.navigate('Login');
-}
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.scroll}>
         <View style={styles.header}>
           <Text style={styles.title}>BUSCADOR </Text>
           <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>

@@ -22,10 +22,10 @@ class Profile extends Component {
     componentDidMount(){
         const profileEmail = this.props.route.params.email;
 
-        db.collection('posts').where('owner', '==', profileEmail).onSnapshot( 
-            docs => {
+        db.collection('posts').where('owner', '==', profileEmail).orderBy('createdAt', 'desc').onSnapshot( 
+            (docs) => {
                 let posts = [];
-                docs.forEach( doc => {
+                docs.forEach( (doc) => {
                     posts.push({
                         id: doc.id,
                         data: doc.data()
@@ -37,9 +37,9 @@ class Profile extends Component {
             }
         )
         db.collection('users').where('owner', '==', profileEmail).onSnapshot(
-            docs => {
+            (docs) => {
                 let user = [];
-                docs.forEach( doc => {
+                docs.forEach( (doc) => {
                     user.push({
                         id: doc.id,
                         data: doc.data()
@@ -97,10 +97,10 @@ class Profile extends Component {
     
     logOut(){
         auth.signOut()
-        .then(res => {
+        .then((res) => {
             this.props.navigation.navigate('Login')
         })
-        .catch(error => console.log('error'))
+        .catch((error) => console.log('error'))
     }
 
     eliminarPerfil(){
@@ -180,7 +180,8 @@ class Profile extends Component {
             }
             
             <Text style={styles.text2}> Lista de sus {this.state.posts.length} posteos  </Text>
-            <FlatList 
+            <FlatList
+                style={styles.posts} 
                 data={this.state.posts}
                 keyExtractor={ onePost => onePost.id.toString()}
                 renderItem={ ({item}) => <Post postData={item} navigation={this.props.navigation}  />}
@@ -260,7 +261,7 @@ const styles= StyleSheet.create ({
     },
 
     logout:{
-        backgroundColor: '#946F5B',
+        backgroundColor: '#4CAF50',
         marginTop: 10,
         textAlign: 'center',
         fontFamily: 'Raleway, sans-serif;',
@@ -270,8 +271,9 @@ const styles= StyleSheet.create ({
     },
 
     inputModal:{
-        color:'#926F5B',
-        border: '2px solid #926F5B',
+        color:'#4CAF50',
+        borderWidth: '2',
+        borderColor: '4CAF50',
         borderRadius:4 ,
         fontFamily: 'Raleway, sans-serif;',
         fontSize:18,
@@ -280,7 +282,7 @@ const styles= StyleSheet.create ({
     },
 
     textModal:{
-        color:'#926F5B',
+        color:'#4CAF50',
         fontSize:20,
         fontWeight: 'bold',
         marginRight:'40%',
@@ -291,12 +293,18 @@ const styles= StyleSheet.create ({
     },
 
     notificacion:{
-        color:'#926F5B',
+        color:'#4CAF50',
         marginTop: '15%',
         fontFamily: 'Raleway, sans-serif;',
         fontSize:20,
         marginLeft:'0',
     },
+    posts: {
+        textAlign:'center',
+        padding:10,
+        backgroundColor:'White'
+
+    }
 })
 
 export default Profile
