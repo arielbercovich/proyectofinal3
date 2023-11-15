@@ -43,7 +43,7 @@ import firebase from 'firebase';
  const styles = StyleSheet.create({
      input:{
          borderWidth:1,
-         borderColor:'green'
+         borderColor:'gray'
      }
  })
 export default FormComentarios

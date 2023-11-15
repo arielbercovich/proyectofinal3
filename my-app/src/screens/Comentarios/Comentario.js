@@ -67,7 +67,7 @@ class Comments extends Component {
                 }
 
                 <TextInput 
-                    placeholder='Agregar comentario'
+                    placeholder='Escriba aquí para comentar'
                     style={styles.input}
                     keyboardType='default'
                     onChangeText={text=> this.setState({comentario:text})}
@@ -76,7 +76,7 @@ class Comments extends Component {
 
                 { this.state.comentario == '' ?
                     <TouchableOpacity >
-                        <Text style={styles.text2}> Escriba para comentar </Text>
+                        <Text style={styles.text2}> No hay ningún comentario para subir </Text>
                     </TouchableOpacity> 
                     :
                     <TouchableOpacity onPress={()=> this.subirComentario(this.state.comentario) }>
@@ -88,61 +88,82 @@ class Comments extends Component {
     }
 }
 
-const styles= StyleSheet.create({
-    input:{
+const styles = StyleSheet.create({
+    input: {
         height: 32,
-        color:'white',
-        backgroundColor: '#D3B9AA',
-        fontFamily: 'Oswald, sans-serif',
-        fontWeight:'bold',
+        color: '#333',
+        backgroundColor: '#F4F4F4',
+        fontFamily: 'Roboto, sans-serif',
+        fontWeight: 'bold',
         fontSize: 20,
         marginTop: 20,
+        paddingHorizontal: 10,
+        borderRadius: 8,
+        borderWidth: 2, // Añadido borde
+        borderColor: '#007BFF', // Color del borde
     },
 
-    text:{
-        fontFamily: 'Oswald, sans-serif',
-        color:'white',
+    text: {
+        fontFamily: 'Roboto, sans-serif',
+        color: '#333',
         fontWeight: 'bold',
         fontSize: 35,
-        textAlign:'center',
-        backgroundColor:'#926F5B',
+        textAlign: 'center',
+        backgroundColor: '#FFA500',
         marginBottom: 30,
+        paddingVertical: 15,
+        borderRadius: 10,
     },
 
-    text2:{
-        color:'#926F5B',
+    text2: {
+        color: '#555',
         marginTop: 5,
-        fontFamily: 'Raleway, sans-serif;',
+        fontFamily: 'Roboto, sans-serif',
         fontSize: 18,
         textAlign: 'center',
-        marginTop: 10, 
-        fontWeight: 'bold',  
+        marginTop: 10,
+        fontWeight: 'bold',
     },
 
-    subir:{
-        color:'#926F5B',
-        marginTop: 5,
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize: 19,
+    subir: {
+        color: '#fff',
+        backgroundColor: '#007BFF',
+        marginTop: 10,
+        paddingVertical: 10,
         textAlign: 'center',
-        textDecorationLine: 'underline',
-        marginTop: 10, 
-        fontWeight: 'bold',  
+        borderRadius: 8,
+        fontSize: 19,
+        fontWeight: 'bold',
     },
 
-    textComent:{
-        color:'#926F5B',
+    textComent: {
+        color: '#555',
         marginTop: 5,
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize:16,
-        marginLeft:'0',
-        marginBottom: 10,   
+        fontFamily: 'Roboto, sans-serif',
+        fontSize: 16,
+        marginLeft: '0',
+        marginBottom: 10,
     },
 
-    scroll:{
-        flex: 1
+    scroll: {
+        flex: 1,
     },
 
-})
+    commentFormContainer: {
+        borderWidth: 2, 
+        borderColor: '#007BFF', 
+        borderRadius: 8,
+        padding: 15,
+        marginVertical: 15,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+});
 
-export default Comments
+export default Comments;

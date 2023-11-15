@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {auth, db} from '../../firebase/config';
-import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
+import {Text, View, FlatList, StyleSheet} from 'react-native'
 import Post from '../../components/Post'
 
 class Home extends Component{
@@ -27,20 +27,12 @@ class Home extends Component{
             }
         )
     }
-    logout(){
-        auth.signOut();
-         //Redirigir al usuario a la home del sitio.
-        this.props.navigation.navigate('Login')
-    }
 
 
     render(){
         return(
             <>
                 <Text style={styles.text}> HOME </Text>
-                <TouchableOpacity onPress={()=>this.logout()}>
-                    <Text>Logout</Text>
-                </TouchableOpacity>
                 <FlatList 
                     data={this.state.posts}
                     keyExtractor={ onePost => onePost.id.toString()}
@@ -51,22 +43,29 @@ class Home extends Component{
     }
 }
 
-const styles= StyleSheet.create ({
-
-    text:{
-        fontFamily: 'Oswald, sans-serif',
-        color:'white',
+const styles = StyleSheet.create({
+    text: {
+        fontFamily: 'Roboto, sans-serif', // Cambiado a una fuente más moderna
+        color: '#fff',
         fontWeight: 'bold',
         fontSize: 35,
-        textAlign:'center',
-        backgroundColor:'#926F5B',
+        textAlign: 'center',
+        backgroundColor: '#007BFF', // Cambiado a un tono de azul vibrante
         marginBottom: 15,
-        marginTop:15
-    }
-})
+        marginTop: 15,
+        paddingVertical: 15, // Agregado espacio interno para mejorar la apariencia
+        borderRadius: 10, // Bordes redondeados para un aspecto más suave
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+});
 
-export default Home
-
-
+export default Home;
 
     
