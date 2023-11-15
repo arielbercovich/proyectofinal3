@@ -30,15 +30,29 @@ class MiPerfil extends Component {
             .where('owner', '==', currentUser.email)
             .orderBy('createdAt', 'desc')
             .onSnapshot((docs) => {
-                let posts = docs.map((doc) => ({ id: doc.id, data: doc.data() }));
-                this.setState({ posts });
+
+                let posts = []
+                docs.forEach(doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                })
+                this.setState({ posts: posts });
             });
 
         currentUser && db.collection('users')
             .where('owner', '==', currentUser.email)
             .onSnapshot((docs) => {
-                let user = docs.map((doc) => ({ id: doc.id, data: doc.data() }))[0];
-                this.setState({ user });
+                
+                let user = []
+                docs.forEach(doc => {
+                    user.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                })
+                this.setState({ user: user[0] });
             });
     }
 
@@ -121,7 +135,7 @@ class MiPerfil extends Component {
                         style={styles.posts}
                         data={this.state.posts}
                         keyExtractor={(onePost) => onePost.id.toString()}
-                        renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}
+                        renderItem={({ item }) => <Post postData={item} navigation={this.props.navigation} />}
                     />
                 }
 
