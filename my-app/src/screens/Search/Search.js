@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import React, { Component } from 'react';
 import { db, auth } from '../../firebase/config';
+import Header from '../../components/Header';
 
 class Search extends Component {
   constructor(props) {
@@ -58,12 +59,7 @@ class Search extends Component {
   render() {
     return (
       <View style={styles.scroll}>
-        <View style={styles.header}>
-          <Text style={styles.title}>BUSCADOR </Text>
-          <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
-            <Text style={styles.logoutButtonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
+        <Header title="BUSCADOR" onLogout={() => this.logout()} />
         <TextInput
           placeholder='Buscar perfil por nombre de usuario o correo'
           keyboardType='default'

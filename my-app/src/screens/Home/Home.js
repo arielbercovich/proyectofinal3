@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {auth, db} from '../../firebase/config';
 import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
 import Post from '../../components/Post'
+import Header from '../../components/Header'
 
 class Home extends Component{
     constructor(){
@@ -38,10 +39,7 @@ class Home extends Component{
     render(){
         return(
             <>
-                <Text style={styles.text}> HOME </Text>
-                <TouchableOpacity onPress={()=>this.logout()}>
-                    <Text>Logout</Text>
-                </TouchableOpacity>
+                <Header title="HOME" onLogout={() => this.logout()} />
                 <FlatList 
                     data={this.state.posts}
                     keyExtractor={ onePost => onePost.id.toString()}
@@ -72,6 +70,48 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        header: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 15,
+            backgroundColor: '#3498db',
+          },
+          title: {
+            fontSize: 24,
+            color: 'white',
+            fontWeight: 'bold',
+          },
+          logoutButton: {
+            backgroundColor: '#e74c3c',
+            padding: 10,
+            borderRadius: 5,
+          },
+          logoutButtonText: {
+            color: 'white',
+            fontWeight: 'bold',
+          },
+          text: {
+            color: 'black',
+            marginTop: 55,
+            marginBottom: 15,
+            fontSize: 16,
+            fontStyle: 'italic',
+            borderWidth: 1,
+            borderColor: 'black',
+            borderRadius: 5,
+            padding: 5,
+            textAlign: 'center',
+          },
+          logoutButton: {
+            backgroundColor: '#e74c3c',
+            padding: 10,
+            borderRadius: 5,
+          },
+          logoutButtonText: {
+            color: 'white',
+            fontWeight: 'bold',
+          }
     },
 });
 

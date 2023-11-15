@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { db, auth } from '../../firebase/config';
 import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import Header from '../../components/Header';
 
 class Register extends Component {
     constructor() {
@@ -43,7 +44,7 @@ class Register extends Component {
     render() {
         return (
             <View style={styles.formContainer}>
-                <Text>Register</Text>
+                <Header title="FORMULARIO DE REGISTRO" showLogout={false} />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ email: text, error: '' })}
@@ -79,8 +80,8 @@ class Register extends Component {
                         <Text style={styles.input}>REGISTRARME</Text>
                     </TouchableOpacity>}
                 {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
-                    <Text>Ya tengo cuenta. Ir al login</Text>
+                <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Login')}>
+                    <Text style={styles.textButton}>Ya tengo cuenta. Ir al login</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -120,22 +121,22 @@ const styles = StyleSheet.create({
     },
   
     button: {
-      backgroundColor: "#405DE6",
-      marginHorizontal: 10,
-      paddingHorizontal: 10,
-      paddingVertical: 6,
-      textAlign: "center",
-      borderRadius: 4,
-      borderWidth: 1,
-      borderStyle: "solid",
-      borderColor: "#fff",
-      width: 300,
-      marginTop: 20,
-    },
-  
-    textButton: {
-      color: "#fff",
-    },
+        backgroundColor: "#405DE6",
+        marginHorizontal: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        textAlign: "center",
+        borderRadius: 4,
+        color: "#fff",
+        marginTop: 20,
+        fontFamily: 'Raleway, sans-serif', // Agregado estilo de fuente
+      },
+    
+      textButton: {
+        color: "#fff",
+        textAlign: "center",
+        fontFamily: 'Raleway, sans-serif', // Agregado estilo de fuente
+      },
   
     input: {
       marginTop: 5,

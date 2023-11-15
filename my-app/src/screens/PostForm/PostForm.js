@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native'
 import {db, auth} from '../../firebase/config'
 import MyCamera from '../../components/Camara/MyCamera'
+import Header from '../../components/Header'
 
 class NewPost extends Component {
     constructor(props){
@@ -46,12 +47,12 @@ class NewPost extends Component {
             <View>
                 { this.state.showCamera ?
                     <View>
-                        <Text style={styles.title}> NEW POST </Text>
+                        <Header title="NEW POST" onLogout={() => this.logout()} />
                         < MyCamera onImageUpload= {url=> this.onImageUpload(url)} />
                     </View>
                     :
                     <View> 
-                        <Text style={styles.posteo}> SUBIR POSTEO </Text>
+                        <Header title="SUBIR POSTEO" onLogout={() => this.logout()} />
                         <TextInput  
                             placeholder='Texto posteo'
                             keyboardType='default'

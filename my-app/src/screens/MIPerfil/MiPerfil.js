@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import Post from '../../components/Post';
+import Header from '../../components/Header';
 
 class MiPerfil extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class MiPerfil extends Component {
         currentUser && db.collection('users')
             .where('owner', '==', currentUser.email)
             .onSnapshot((docs) => {
-                
+
                 let user = []
                 docs.forEach(doc => {
                     user.push({
@@ -79,8 +80,8 @@ class MiPerfil extends Component {
 
     render() {
         return (
-            <View style={styles.scroll}>
-                <Text style={styles.perfil}> PERFIL </Text>
+            <View style={styles.container}>
+                <Header title="MI PERFIL" onLogout={() => this.logOut()} />
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -101,34 +102,34 @@ class MiPerfil extends Component {
                     />
 
                     {this.state.errors === ''
-                        ? <TouchableOpacity style={styles.text} onPress={() => this.eliminarPerfil()}>
-                            <Text style={styles.logout}>Borrar perfil</Text>
+                        ? <TouchableOpacity style={styles.button} onPress={() => this.eliminarPerfil()}>
+                            <Text style={styles.buttonText}>Borrar perfil</Text>
                         </TouchableOpacity>
                         : <Text style={styles.notificacion}>{this.state.errors.message}</Text>
                     }
 
                     <TouchableOpacity onPress={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                        <Text style={styles.logout}>Cancelar</Text>
+                        <Text style={styles.buttonText}>Cancelar</Text>
                     </TouchableOpacity>
                 </Modal>
 
                 {this.state.user
-                    ? <View style={styles.container}>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.text}> Nombre de usuario: {this.state.user.data.username} </Text>
-                            <Text style={styles.text}> Email: {this.state.user.data.owner} </Text>
-                            <Text style={styles.text}> Biografía: {this.state.user.data.bio} </Text>
-                        </View>
+                    ? <View style={styles.profileContainer}>
                         <Image
-                            style={styles.foto}
-                            source={{ uri: this.state.user.data.foto }} 
+                            style={styles.profileImage}
+                            source={{ uri: this.state.user.data.foto }}
                             resizeMode="cover"
                         />
+                        <View style={styles.profileTextContainer}>
+                            <Text style={styles.username}>{this.state.user.data.username}</Text>
+                            <Text style={styles.email}>{this.state.user.data.owner}</Text>
+                            <Text style={styles.bio}>{this.state.user.data.bio}</Text>
+                        </View>
                     </View>
                     : <Text> </Text>
                 }
 
-                <Text style={styles.text2}>Lista de sus {this.state.posts.length} posteos</Text>
+                <Text style={styles.postHeading}>Lista de sus {this.state.posts.length} posteos</Text>
                 {this.state.posts.length === 0
                     ? <Text>No hay posteos disponibles</Text>
                     : <FlatList
@@ -142,12 +143,10 @@ class MiPerfil extends Component {
                 {this.state.user
                     ? (this.state.user.data.owner === auth.currentUser.email
                         ? <View>
-                            <TouchableOpacity style={styles.text} onPress={() => this.logOut()}>
-                                <Text style={styles.logout}>Log out</Text>
+                            <TouchableOpacity style={styles.button} onPress={() => this.logOut()}>
+                                <Text style={styles.buttonText}>Cerrar sesión</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.text} onPress={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                                <Text style={styles.logout}>Eliminar Perfil</Text>
-                            </TouchableOpacity>
+
                         </View>
                         : <Text></Text>
                     )
@@ -157,81 +156,60 @@ class MiPerfil extends Component {
         );
     }
 }
+
 const styles = StyleSheet.create({
-    scroll: {
-        flex: 2,
-    },
-
-    perfil: {
-        fontFamily: 'Oswald, sans-serif',
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 35,
-        textAlign: 'center',
-        backgroundColor: '#4CAF50', // Verde oscuro
-        marginBottom: 15,
-        marginTop: 15,
-    },
-
-    text: {
-        fontFamily: 'Oswald, sans-serif',
-        color: 'white',
-        fontSize: 20,
-        flexDirection: 'column',
-    },
-
-    text2: {
-        backgroundColor: 'white',
-        color: 'black',
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize: 18,
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-
-    foto: {
-        height: 75,
-        width: 75,
-        marginTop: 10,
-        borderRadius: 50,
-        padding: 5,
-    },
-
     container: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        backgroundColor: '#4CAF50', // Verde oscuro
+        flex: 1,
+        backgroundColor: '#F8F8F8',
+        paddingHorizontal: 15,
     },
-
-    textContainer: {
-        flexDirection: 'wrap',
+    profileContainer: {
+        flexDirection: 'row',
         marginTop: 20,
     },
-
-    logout: {
-        backgroundColor: '#4CAF50', // Verde oscuro
-        marginTop: 10,
-        textAlign: 'center',
-        fontFamily: 'Raleway, sans-serif;',
+    profileImage: {
+        height: 75,
+        width: 75,
+        borderRadius: 50,
+    },
+    profileTextContainer: {
+        marginLeft: 15,
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+    username: {
+        fontFamily: 'Oswald, sans-serif',
+        color: '#333',
         fontSize: 20,
+        fontWeight: 'bold',
+    },
+    email: {
+        fontFamily: 'Oswald, sans-serif',
+        color: '#555',
+        fontSize: 16,
+        marginTop: 5,
+    },
+    bio: {
+        fontFamily: 'Oswald, sans-serif',
+        color: '#555',
+        fontSize: 16,
+        marginTop: 5,
+    },
+    button: {
+        backgroundColor: 'red',
+        marginTop: 10,
+        paddingVertical: 10,
+        borderRadius: 8,
+    },
+    buttonText: {
+        fontFamily: 'Raleway, sans-serif;',
+        fontSize: 18,
+        textAlign: 'center',
         fontWeight: 'bold',
         color: 'white',
     },
-
-    inputModal: {
-        color: '#4CAF50', // Verde oscuro
-        borderWidth: 2,
-        borderColor: '#4CAF50', // Verde oscuro
-        borderRadius: 4,
-        fontFamily: 'Raleway, sans-serif;',
-        fontSize: 18,
-        marginLeft: 0,
-        fontStyle: 'italic',
-    },
-
     textModal: {
-        color: '#4CAF50', // Verde oscuro
+        color: '#4CAF50',
         fontSize: 20,
         fontWeight: 'bold',
         marginRight: '40%',
@@ -240,15 +218,32 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginTop: 10,
     },
-
+    inputModal: {
+        color: '#4CAF50',
+        borderWidth: 2,
+        borderColor: '#4CAF50',
+        borderRadius: 4,
+        fontFamily: 'Raleway, sans-serif;',
+        fontSize: 18,
+        marginLeft: 0,
+        fontStyle: 'italic',
+    },
     notificacion: {
-        color: '#4CAF50', // Verde oscuro
+        color: '#4CAF50',
         marginTop: '15%',
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 20,
         marginLeft: 0,
     },
-    
+    postHeading: {
+        backgroundColor: 'white',
+        color: '#333',
+        fontFamily: 'Raleway, sans-serif;',
+        fontSize: 18,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: 15,
+    },
     posts: {
         textAlign: 'center',
         padding: 10,
@@ -256,6 +251,4 @@ const styles = StyleSheet.create({
     },
 });
 
-
-
-export default MiPerfil
+export default MiPerfil;

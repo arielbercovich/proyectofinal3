@@ -79,35 +79,45 @@ class Post extends Component {
         <Text style={styles.text}>{this.props.postData.data.textoPost}</Text>
 
         <View style={styles.iconContainer}>
-          {this.state.miLike ? (
+          
+
+          
+        </View>
+
+        <Text style={styles.textLike}>{this.state.miLike ? (
             <TouchableOpacity style={styles.icon} onPress={() => this.disLike()}>
-              <FontAwesome name="heart" color="#4CAF50" size={28} />
+              <FontAwesome name="heart" color="red" size={28} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.icon} onPress={() => this.like()}>
-              <FontAwesome name="heart-o" color="#4CAF50" size={28} />
+              <FontAwesome name="heart-o" color="black" size={28} />
             </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() =>
-              this.props.navigation.navigate('Comentario', {
-                id: this.props.postData.id,
-                agregarComment: (comment) => this.setComment(comment),
-              })
-            }
-          >
-            <FontAwesome name="comment-o" color="#4CAF50" size={28} />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.textLike}>{this.state.cantidadLikes} likes</Text>
+          )} {this.state.cantidadLikes} likes</Text>
 
         {this.state.comentario.length === 1 ? (
-          <Text style={styles.textComent3}>{this.state.comentario.length} comentario</Text>
+          <Text style={styles.textComent3}><TouchableOpacity
+          style={styles.icon}
+          onPress={() =>
+            this.props.navigation.navigate('Comentario', {
+              id: this.props.postData.id,
+              agregarComment: (comment) => this.setComment(comment),
+            })
+          }
+        >
+          <FontAwesome name="comment-o" color="black" size={28} />
+        </TouchableOpacity> {this.state.comentario.length} comentario</Text>
         ) : (
-          <Text style={styles.textComent3}>{this.state.comentario.length} comentarios</Text>
+          <Text style={styles.textComent3}><TouchableOpacity
+          style={styles.icon}
+          onPress={() =>
+            this.props.navigation.navigate('Comentario', {
+              id: this.props.postData.id,
+              agregarComment: (comment) => this.setComment(comment),
+            })
+          }
+        >
+          <FontAwesome name="comment-o" color="black" size={28} />
+        </TouchableOpacity> {this.state.comentario.length} comentarios</Text>
         )}
 
         <FlatList
@@ -122,7 +132,7 @@ class Post extends Component {
 
         {this.props.postData.data.owner === auth.currentUser.email ? (
           <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-            <Text style={styles.borrar}> Borrar este posteo</Text>
+            <Text style={styles.borrar}> Borrar este posteo 🗑️</Text>
           </TouchableOpacity>
         ) : (
           <Text></Text>
@@ -156,35 +166,35 @@ const styles = StyleSheet.create({
     text: {
       marginTop: 10,
       fontSize: 18,
-      color: '#4CAF50',
-      fontFamily: 'Arial, sans-serif',
+      color: 'black',
+      fontFamily: 'italic',
     },
     text2: {
-      color: '#4CAF50',
+      color: 'black',
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 10,
       width: '100%',
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'italic',
     },
     textComent: {
-      color: '#4CAF50',
+      color: 'black',
       fontSize: 16,
       marginBottom: 5,
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'italic',
     },
     textComent2: {
-      color: '#4CAF50',
+      color: 'black',
       fontSize: 16,
       fontStyle: 'italic',
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'italic',
     },
     textComent3: {
-      color: '#4CAF50',
+      color: 'black',
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'italic',
     },
     iconContainer: {
       flexDirection: 'row',
@@ -196,14 +206,14 @@ const styles = StyleSheet.create({
       marginHorizontal: 10,
     },
     textLike: {
-      color: '#4CAF50',
+      color: 'black',
       fontSize: 18,
       fontWeight: 'bold',
       marginVertical: 5,
       fontFamily: 'Arial, sans-serif',
     },
     agregar: {
-      color: '#4CAF50',
+      color: 'black',
       textDecorationLine: 'underline',
       marginTop: 10,
       fontSize: 18,
@@ -213,7 +223,7 @@ const styles = StyleSheet.create({
     },
     borrar: {
       marginTop: 10,
-      backgroundColor: '#4CAF50',
+      backgroundColor: 'red',
       fontSize: 18,
       color: 'white',
       padding: 8,

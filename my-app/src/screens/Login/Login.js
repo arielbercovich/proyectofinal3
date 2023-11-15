@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { auth } from '../../firebase/config';
 import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import Header from '../../components/Header';
 
 class Login extends Component {
     constructor() {
@@ -46,7 +47,7 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.formContainer}>
-                <Text>Login</Text>
+                <Header title="INICIA SESIÓN" showLogout={false} />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ error: null, email: text })}
