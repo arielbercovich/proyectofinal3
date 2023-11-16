@@ -1,153 +1,152 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Camera } from 'expo-camera';
-import {storage} from '../../firebase/config'
-import { View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native'
+import { storage } from '../../firebase/config';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 class MyCamera extends Component {
-    constructor (props){
-        super (props)
-        this.state={
+    constructor(props) {
+        super(props);
+        this.state = {
             permissions: false,
             showCamera: true,
-            urlTemporal:''
-        }
-        this.metodosDeCamera = ''
+            urlTemporal: '',
+        };
+        this.metodosDeCamera = '';
     }
 
-    componentDidMount(){
+    componentDidMount() {
         Camera.requestCameraPermissionsAsync()
-        .then(() => this.setState(
-            {
-                permissions: true,
-            }
-        ))
-        .catch (error=> console.log(error))
-    }
-
-    sacarFoto(){
-        this.metodosDeCamera.takePictureAsync()
-        .then(foto => {
-            this.setState({
-                urlTemporal: foto.uri,
-                showCamera: false
-            })
-        })
-        .catch(e => console.log(e))
-    }
-
-    guardarFoto(){
-        fetch(this.state.urlTemporal) 
-        .then(res=> res.blob())
-        .then(imagen => {
-            const refStorage = storage.ref(`photos/${Date.now()}.jpg`);
-            refStorage.put(imagen)
-            .then(()=>{
-                refStorage.getDownloadURL()
-                .then(url => this.props.onImageUpload(url))
-            })
-            .then(()=>{
+            .then(() =>
                 this.setState({
-                    showCamera:false
-            })
-        })
-        })
-        .catch(e=> console.log(e))
+                    permissions: true,
+                })
+            )
+            .catch((error) => console.log(error));
     }
 
-    cancelar(){
+    sacarFoto() {
+        this.metodosDeCamera
+            .takePictureAsync()
+            .then((foto) => {
+                this.setState({
+                    urlTemporal: foto.uri,
+                    showCamera: false,
+                });
+            })
+            .catch((e) => console.log(e));
+    }
+
+    guardarFoto() {
+        fetch(this.state.urlTemporal)
+            .then((res) => res.blob())
+            .then((imagen) => {
+                const refStorage = storage.ref(`photos/${Date.now()}.jpg`);
+                refStorage
+                    .put(imagen)
+                    .then(() => {
+                        refStorage.getDownloadURL().then((url) => this.props.onImageUpload(url));
+                    })
+                    .then(() => {
+                        this.setState({
+                            showCamera: false,
+                        });
+                    });
+            })
+            .catch((e) => console.log(e));
+    }
+
+    cancelar() {
         this.setState({
             urlTemporal: '',
-            showCamera:true
-        }) 
+            showCamera: true,
+        });
     }
 
-    render(){
+    render() {
         return (
-            <View  style = { styles.cameraBody}>
-                { this.state.permissions ?
-                this.state.showCamera ?
-                    <View  style = { styles.cameraBody} > 
-                        <Camera
-                            style = {styles.cameraBody}
-                            type= {Camera.Constants.Type.front}
-                            ref= {metodosDeCamera => this.metodosDeCamera = metodosDeCamera}
-                        />
-                        <TouchableOpacity style={styles.button} onPress= {()=>this.sacarFoto()}>
-                            <Text style={styles.sacar}>Sacar foto</Text>
-                        </TouchableOpacity>
-                    </ View>
-                    :
-                    <View  style={styles.preview}>
-                        <Image
-                            style={styles.preview}
-                            source={{uri: this.state.urlTemporal}}
-                            resizeMode='cover'
-                        />
-                        <TouchableOpacity style={styles.button} onPress={()=> this.cancelar()}>
-                            <Text style={styles.boton}>Cancelar</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button} onPress={()=> this.guardarFoto()}>
-                            <Text style={styles.boton}>Aceptar</Text>
-                        </TouchableOpacity>
-                    </View>
-                    :
-                    <Text style={styles.text}> No tengo permisos</Text>
-                }
+            <View style={styles.container}>
+                {this.state.permissions ? (
+                    this.state.showCamera ? (
+                        <View style={styles.cameraContainer}>
+                            <Camera
+                                style={styles.camera}
+                                type={Camera.Constants.Type.front}
+                                ref={(metodosDeCamera) => (this.metodosDeCamera = metodosDeCamera)}
+                            >
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity style={styles.captureButton} onPress={() => this.sacarFoto()} />
+                                </View>
+                            </Camera>
+                        </View>
+                    ) : (
+                        <View style={styles.previewContainer}>
+                            <Image style={styles.preview} source={{ uri: this.state.urlTemporal }} resizeMode="cover" />
+                            <TouchableOpacity style={styles.button} onPress={() => this.cancelar()}>
+                                <Text style={styles.buttonText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => this.guardarFoto()}>
+                                <Text style={styles.buttonText}>Aceptar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                ) : (
+                    <Text style={styles.text}>No tengo permisos</Text>
+                )}
             </View>
-        )
+        );
     }
 }
 
-const styles= StyleSheet.create ({
-    cameraBody: {
-        height: '50vh',
-        width: '100vw',
-        position: 'absolute',
-        marginTop:50
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
     },
-
- button: {
-        height: '5%',
-        width: '100%',
-        padding: 5,
-        marginTop: 10,
+    cameraContainer: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    camera: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    buttonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 20,
+    },
+    captureButton: {
         backgroundColor: '#4CAF50', // Verde oscuro
+        borderRadius: 50, // Forma redonda
+        padding: 20,
+        alignSelf: 'center',
+        margin: 20,
+        borderWidth: 3,
+        borderColor: '#fff', // Borde blanco
+    },
+    previewContainer: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 5,
     },
-
-    boton: {
-        height: '5%',
-        padding: 5,
-        marginTop: 20,
-        backgroundColor: '#007BFF', // Azul vibrante
-        textAlign: 'center',
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'white',
-        borderRadius: 5,
-    },
-
     preview: {
-        height: '45%',
-        marginTop: 50,
+        width: '100%',
+        height: '100%',
     },
-
-    sacar: {
+    button: {
         backgroundColor: '#4CAF50', // Verde oscuro
-        marginTop: 10,
-        textAlign: 'center',
+        margin: 10,
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
         fontFamily: 'Raleway, sans-serif',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         color: 'white',
-        borderRadius: 5,
-        paddingVertical: 10,
     },
-
     text: {
         marginTop: 20,
         fontWeight: 'bold',

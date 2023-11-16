@@ -13,6 +13,10 @@ class MiPerfil extends Component {
             pass: '',
             errors: '',
             modalVisible: false,
+            editing: false,
+            newUsername: '',
+            newEmail: '',
+            newBio: '',
         };
     }
 
@@ -31,7 +35,6 @@ class MiPerfil extends Component {
             .where('owner', '==', currentUser.email)
             .orderBy('createdAt', 'desc')
             .onSnapshot((docs) => {
-
                 let posts = []
                 docs.forEach(doc => {
                     posts.push({
@@ -45,7 +48,6 @@ class MiPerfil extends Component {
         currentUser && db.collection('users')
             .where('owner', '==', currentUser.email)
             .onSnapshot((docs) => {
-
                 let user = []
                 docs.forEach(doc => {
                     user.push({
@@ -53,7 +55,11 @@ class MiPerfil extends Component {
                         data: doc.data()
                     })
                 })
-                this.setState({ user: user[0] });
+                this.setState({
+                    user: user[0],
+                    newUsername: user[0]?.data.username || '',
+                    newBio: user[0]?.data.bio || '',
+                });
             });
     }
 
@@ -63,67 +69,75 @@ class MiPerfil extends Component {
             .catch((error) => console.log('error'));
     }
 
-    eliminarPerfil() {
-        !this.state.user
-            ? console.log('No hay usuario para eliminar')
-            : auth.signInWithEmailAndPassword(auth.currentUser.email, this.state.pass)
-                .then(() => db.collection('users').doc(this.state.user.id).delete()
-                    .then(() => {
-                        const user = auth.currentUser;
-                        user.delete();
-                        this.setState({ modalVisible: false });
-                        this.props.navigation.navigate('Register');
-                    })
-                    .catch((error) => this.setState({ errors: error }))
-                );
+
+    saveChanges() {
+        const { newUsername, newBio } = this.state;
+
+        if (newUsername.trim() === '') {
+            this.setState({ errors: 'El nombre de usuario no puede estar vacío' });
+        } else {
+            db.collection('users').doc(this.state.user.id).update({
+                username: newUsername,
+                bio: newBio,
+            })
+            .then(() => {
+                this.setState({
+                    editing: false,
+                    errors: '',
+                });
+            })
+            .catch(error => {
+                this.setState({ errors: error.message });
+            });
+        }
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Header title="MI PERFIL" onLogout={() => this.logOut()} />
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        this.setState({
-                            modalVisible: !this.state.modalVisible
-                        })
-                    }}>
-                    <Text style={styles.textModal}>Confirme su contraseña</Text>
-                    <TextInput
-                        style={styles.inputModal}
-                        placeholder='Password'
-                        keyboardType='default'
-                        secureTextEntry={true}
-                        onChangeText={text => this.setState({ errors: '', pass: text })}
-                        value={this.state.pass}
-                    />
-
-                    {this.state.errors === ''
-                        ? <TouchableOpacity style={styles.button} onPress={() => this.eliminarPerfil()}>
-                            <Text style={styles.buttonText}>Borrar perfil</Text>
-                        </TouchableOpacity>
-                        : <Text style={styles.notificacion}>{this.state.errors.message}</Text>
-                    }
-
-                    <TouchableOpacity onPress={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                        <Text style={styles.buttonText}>Cancelar</Text>
-                    </TouchableOpacity>
-                </Modal>
 
                 {this.state.user
                     ? <View style={styles.profileContainer}>
-                        <Image
-                            style={styles.profileImage}
-                            source={{ uri: this.state.user.data.foto }}
-                            resizeMode="cover"
-                        />
+                        
                         <View style={styles.profileTextContainer}>
-                            <Text style={styles.username}>{this.state.user.data.username}</Text>
-                            <Text style={styles.email}>{this.state.user.data.owner}</Text>
-                            <Text style={styles.bio}>{this.state.user.data.bio}</Text>
+                            {this.state.editing ? (
+                                <View>
+                                    <Text style={styles.username}>Nuevo nombre de usuario:</Text>
+                                    <TextInput
+                                        style={styles.inputModal}
+                                        placeholder="Nuevo nombre de usuario"
+                                        onChangeText={(text) => this.setState({ newUsername: text })}
+                                        value={this.state.newUsername}
+                                    />
+                                    <br></br>
+                                    <Text style={styles.username}>Nueva bio:</Text>
+                                    <TextInput
+                                        style={styles.inputModal}
+                                        placeholder="Nueva bio"
+                                        onChangeText={(text) => this.setState({ newBio: text })}
+                                        value={this.state.newBio}
+                                    />
+                                    <TouchableOpacity style={styles.ebutton} onPress={() => this.saveChanges()}>
+                                        <Text style={styles.buttonText}>Confirmar Cambios</Text>
+                                    </TouchableOpacity>
+                                    {this.state.errors !== '' && (
+                                        <Text style={styles.notificacion}>{this.state.errors}</Text>
+                                    )}
+                                </View>
+                            ) : (
+                                <View>
+                                    <Text style={styles.username}>{this.state.user.data.username}</Text>
+                                    <Text style={styles.email}>{this.state.user.data.owner}</Text>
+                                    <Text style={styles.bio}>{this.state.user.data.bio}</Text>
+                                    <TouchableOpacity
+                                        style={styles.ebutton}
+                                        onPress={() => this.setState({ editing: true })}
+                                    >
+                                        <Text style={styles.buttonText}>Editar Perfil</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                         </View>
                     </View>
                     : <Text> </Text>
@@ -201,6 +215,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 8,
     },
+    ebutton: {
+        backgroundColor: 'gray',
+        marginTop: 10,
+        paddingVertical: 10,
+        borderRadius: 8,
+    },
     buttonText: {
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 18,
@@ -219,9 +239,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     inputModal: {
-        color: '#4CAF50',
+        color: 'black',
         borderWidth: 2,
-        borderColor: '#4CAF50',
+        borderColor: 'darkgray',
         borderRadius: 4,
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 18,
