@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     alignItems: 'center',
     marginBottom: 10,
-    alignSelf: 'center',  // Agregado para centrar el botón horizontalmente
+    alignSelf: 'center',  
   },
   notificacion: {
     color: '#4CAF50',

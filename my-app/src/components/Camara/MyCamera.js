@@ -117,13 +117,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     captureButton: {
-        backgroundColor: '#4CAF50', // Verde oscuro
-        borderRadius: 50, // Forma redonda
+        backgroundColor: '#4CAF50',
+        borderRadius: 50, 
         padding: 20,
         alignSelf: 'center',
         margin: 20,
         borderWidth: 3,
-        borderColor: '#fff', // Borde blanco
+        borderColor: '#fff',
     },
     previewContainer: {
         flex: 1,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     button: {
-        backgroundColor: '#4CAF50', // Verde oscuro
+        backgroundColor: '#4CAF50',
         margin: 10,
         padding: 15,
         borderRadius: 5,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 20,
         fontWeight: 'bold',
-        color: '#007BFF', // Azul vibrante
+        color: '#007BFF', 
         fontFamily: 'Raleway, sans-serif',
     },
 });

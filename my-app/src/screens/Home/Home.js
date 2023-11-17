@@ -52,16 +52,16 @@ class Home extends Component{
 
 const styles = StyleSheet.create({
     text: {
-        fontFamily: 'Roboto, sans-serif', // Cambiado a una fuente más moderna
+        fontFamily: 'Roboto, sans-serif', 
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 35,
         textAlign: 'center',
-        backgroundColor: '#007BFF', // Cambiado a un tono de azul vibrante
+        backgroundColor: '#007BFF', 
         marginBottom: 15,
         marginTop: 15,
-        paddingVertical: 15, // Agregado espacio interno para mejorar la apariencia
-        borderRadius: 10, // Bordes redondeados para un aspecto más suave
+        paddingVertical: 15, 
+        borderRadius: 10, 
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

@@ -86,21 +86,21 @@ const styles= StyleSheet.create ({
     },
 
     text:{
-        color:'#926F5B',
+        color:'black',
         marginTop: 0,
         marginBottom: '10%',
         fontFamily: 'Raleway, sans-serif;',
         fontSize: 25,
         marginLeft:'0',
         fontStyle: 'italic', 
-        border: '2px solid #926F5B',
+        border: '2px solid black',
         borderRadius: 4 , 
         },
     
     input:{
         height: 32,
         color:'white',
-        backgroundColor: '#D3B9AA',
+        backgroundColor: '#3498db',
         fontFamily: 'Oswald, sans-serif',
         fontWeight:'bold',
         fontSize: 25,

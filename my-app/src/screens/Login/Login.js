@@ -29,7 +29,6 @@ class Login extends Component {
                 // Cuando Firebase responde sin error
                 console.log('Login ok', response);
 
-                // Cambiar los estados a vacío como están al inicio.
 
                 // Redirigir al usuario a la home del sitio.
                 this.props.navigation.navigate('Menu');
@@ -37,7 +36,7 @@ class Login extends Component {
             .catch(error => {
                 // Cuando Firebase responde con un error.
                 console.log({ error });
-                this.setState({ error }); // Actualizar el estado de error
+                this.setState({ error }); 
             });
     }
     recordarme(){

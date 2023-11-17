@@ -129,13 +129,13 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         color: "#fff",
         marginTop: 20,
-        fontFamily: 'Raleway, sans-serif', // Agregado estilo de fuente
+        fontFamily: 'Raleway, sans-serif',
       },
     
       textButton: {
         color: "#fff",
         textAlign: "center",
-        fontFamily: 'Raleway, sans-serif', // Agregado estilo de fuente
+        fontFamily: 'Raleway, sans-serif',
       },
   
     input: {
