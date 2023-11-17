@@ -11,6 +11,7 @@ class Post extends Component {
       cantidadLikes: this.props.postData.data.likes.length,
       miLike: false,
       comentario: this.props.postData.data.comentario.sort((a, b) => b.createdAt - a.createdAt),
+      
     };
   }
 
@@ -63,6 +64,7 @@ class Post extends Component {
       comentario: sortedArr,
     });
   }
+  
 
   render() {
     return (
@@ -88,6 +90,7 @@ class Post extends Component {
             <TouchableOpacity style={styles.icon} onPress={() => this.disLike()}>
               <FontAwesome name="heart" color="red" size={28} />
             </TouchableOpacity>
+            
           ) : (
             <TouchableOpacity style={styles.icon} onPress={() => this.like()}>
               <FontAwesome name="heart-o" color="black" size={28} />

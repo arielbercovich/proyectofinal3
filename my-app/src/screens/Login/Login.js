@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { auth } from '../../firebase/config';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 
 class Login extends Component {
@@ -10,15 +10,26 @@ class Login extends Component {
             email: '',
             password: '',
             error: null, 
-            recordarme: false
+            recordarme: false,
+            checkingSession: false,
         };
     }
 
     componentDidMount() {
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 this.props.navigation.navigate('Menu');
               
+            } else{
+                console.log('Checking session...');
+                this.setState({
+                    checkingSession: true
+                })
+                setTimeout(() => {
+                    this.setState({
+                        checkingSession: false
+                    });
+                }, 5000);
             }
         });
     }
@@ -46,42 +57,46 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.formContainer}>
-                <Header title="INICIA SESIÓN" showLogout={false} />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ error: null, email: text })}
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    value={this.state.email}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ error: null, password: text })}
-                    placeholder='Password'
-                    keyboardType='default'
-                    secureTextEntry={true}
-                    value={this.state.password}
-                />
-                {this.state.error === null ? (
-                    <TouchableOpacity style={styles.button} onPress={() => this.login(this.state.email, this.state.password)}>
-                        <Text style={styles.textButton}>Iniciar sesión</Text>
-                    </TouchableOpacity>
+                {this.state.checkingSession ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
                 ) : (
-                    <View>
-                        <Text style={styles.errorMessage}>{this.state.error.message}</Text>
-                    </View>
+                    <>
+                        <Header title="INICIA SESIÓN" showLogout={false} />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => this.setState({ error: null, email: text })}
+                            placeholder='Email'
+                            keyboardType='email-address'
+                            value={this.state.email}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => this.setState({ error: null, password: text })}
+                            placeholder='Password'
+                            keyboardType='default'
+                            secureTextEntry={true}
+                            value={this.state.password}
+                        />
+                        {this.state.error === null ? (
+                            <TouchableOpacity style={styles.button} onPress={() => this.login(this.state.email, this.state.password)}>
+                                <Text style={styles.textButton}>Iniciar sesión</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <View>
+                                <Text style={styles.errorMessage}>{this.state.error.message}</Text>
+                            </View>
+                        )}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Registro')}>
+                            <Text style={styles.registro}>
+                                ¿No tenés una cuenta? Registrate
+                            </Text>
+                        </TouchableOpacity>
+                    </>
                 )}
-
-
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Registro')}>
-                    <Text style={styles.registro}>
-                        ¿No tenés una cuenta? Registrate
-                    </Text>
-                </TouchableOpacity>
             </View>
         );
     }
-}
+}   
 
 
 const styles = StyleSheet.create({

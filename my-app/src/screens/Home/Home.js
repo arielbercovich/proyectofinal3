@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {auth, db} from '../../firebase/config';
-import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
+import {Text, View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native'
 import Post from '../../components/Post'
 import Header from '../../components/Header'
 
@@ -8,11 +8,21 @@ class Home extends Component{
     constructor(){
         super();
         this.state = {
-            posts:[]
+            posts:[],
+            checkingSession: true,
         }
     }
 
     componentDidMount(){
+        auth.onAuthStateChanged(user => {
+            if(!user){
+                this.props.navigation.navigate('Login');
+            }else{
+                this.setState({
+                    checkingSession: false
+                });
+            }
+        })
         db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
             docs => {
                 let posts = [];
@@ -40,11 +50,20 @@ class Home extends Component{
         return(
             <>
                 <Header title="HOME" onLogout={() => this.logout()} />
-                <FlatList 
+                {
+                    this.state.posts.length === 0
+                    ?
+                    <View style ={styles.loader}>
+                        <ActivityIndicator size='large' color='blue'/>
+                    </View>
+                    :
+
+                    <FlatList 
                     data={this.state.posts}
                     keyExtractor={ onePost => onePost.id.toString()}
                     renderItem={ ({item}) => <Post postData={item} navigation={this.props.navigation}/>}
-                />  
+                    /> 
+                } 
             </>
         )
     }
@@ -111,6 +130,10 @@ const styles = StyleSheet.create({
           logoutButtonText: {
             color: 'white',
             fontWeight: 'bold',
+          },
+          loader:{
+            justifyContent: 'center',
+            alignItems: 'center'
           }
     },
 });
