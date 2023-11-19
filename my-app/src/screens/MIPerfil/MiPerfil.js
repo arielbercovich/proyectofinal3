@@ -130,6 +130,11 @@ class MiPerfil extends Component {
                                     <Text style={styles.username}>{this.state.user.data.username}</Text>
                                     <Text style={styles.email}>{this.state.user.data.owner}</Text>
                                     <Text style={styles.bio}>{this.state.user.data.bio}</Text>
+                                    <Image
+                                        style={styles.foto}
+                                        source={this.state.user.data.foto}
+                                        resizeMode='cover'
+                                        />
                                     <TouchableOpacity
                                         style={styles.ebutton}
                                         onPress={() => this.setState({ editing: true })}
@@ -269,6 +274,13 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
     },
+    foto:{
+        height:75,
+        width:75,
+        marginTop: 10,
+        borderRadius:'50%',
+        padding: 5,
+    }
 });
 
 export default MiPerfil;
