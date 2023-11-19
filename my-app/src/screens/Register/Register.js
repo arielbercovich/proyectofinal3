@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { db, auth } from '../../firebase/config';
 import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import Header from '../../components/Header';
+import MyCamera from '../../components/Camara/MyCamera'
 
 class Register extends Component {
     constructor() {
@@ -11,7 +12,9 @@ class Register extends Component {
             username: '',
             pass: '',
             bio: '',
-            error: null
+            error: null,
+            showCamera: false,
+            foto:''
         }
     }
 
@@ -24,13 +27,14 @@ class Register extends Component {
         })
     }
 
-    register(email, pass, username, bio) {
+    register(email, pass, username, bio, foto) {
         auth.createUserWithEmailAndPassword(email, pass)
             .then(res => {
                 db.collection('users').add({
                     owner: email,
                     username: username,
                     bio: bio,
+                    foto: foto,
                     createdAt: Date.now()
                 })
                 this.props.navigation.navigate('Login')
@@ -39,6 +43,14 @@ class Register extends Component {
                 this.setState({ error:error.message });
                 console.log(error);
             });
+    }
+    onImageUpload(url){
+        this.setState({
+            foto:url,
+            showCamera:false
+
+        })
+
     }
 
     render() {
@@ -74,9 +86,20 @@ class Register extends Component {
                     keyboardType='default'
                     value={this.state.bio}
                 />
-                {this.state.email == '' || this.state.pass == '' || this.state.username == '' ?
-                    <Text style={styles.notificacion}>* campo obligatorio</Text> :
-                    <TouchableOpacity onPress={() => this.register(this.state.email, this.state.pass, this.state.username, this.state.bio)}>
+                {this.state.showCamera?
+                <View style={{width:'50vw',heigth:'50vh'}}>
+                    <MyCamera onImageUpload={url => this.onImageUpload(url)}/>
+                    </View>
+                    :
+                    <TouchableOpacity onPress={()=> this.setState({showCamera:true})}>
+                        <Text style={styles.input}>Subir foto de perfil</Text>
+                    </TouchableOpacity>
+                }
+
+                {this.state.email == '' || this.state.pass == '' || this.state.username == '' || this.state.foto == '' ?
+                    <Text style={styles.notificacion}>* campo obligatorio</Text> 
+                    :
+                    <TouchableOpacity onPress={() => this.register(this.state.email, this.state.pass, this.state.username, this.state.bio, this.state.foto)}>
                         <Text style={styles.input}>REGISTRARME</Text>
                     </TouchableOpacity>}
                 {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
