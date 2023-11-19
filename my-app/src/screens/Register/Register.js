@@ -96,7 +96,7 @@ class Register extends Component {
                     </TouchableOpacity>
                 }
 
-                {this.state.email == '' || this.state.pass == '' || this.state.username == '' || this.state.foto == '' ?
+                {this.state.email == '' || this.state.pass == '' || this.state.username == '' ?
                     <Text style={styles.notificacion}>* campo obligatorio</Text> 
                     :
                     <TouchableOpacity onPress={() => this.register(this.state.email, this.state.pass, this.state.username, this.state.bio, this.state.foto)}>

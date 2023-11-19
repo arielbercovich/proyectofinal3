@@ -130,7 +130,7 @@ class Profile extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header title="PERFIL" onLogout={() => this.logout()} />
+        <Header title="PERFIL" onLogout={() => this.logOut()} />
         <Modal
           animationType="slide"
           transparent={false}

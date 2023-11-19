@@ -77,6 +77,7 @@ class Login extends Component {
                             secureTextEntry={true}
                             value={this.state.password}
                         />
+                        
                         {this.state.error === null ? (
                             <TouchableOpacity style={styles.button} onPress={() => this.login(this.state.email, this.state.password)}>
                                 <Text style={styles.textButton}>Iniciar sesión</Text>
@@ -161,7 +162,14 @@ const styles = StyleSheet.create({
   
     errorMessage: {
       color: 'red',
-    }
+    },
+    notificacion:{
+        color:'#926F5B',
+        marginTop: '15%',
+        fontFamily: 'Raleway, sans-serif;',
+        fontSize:20,
+        marginLeft:'0',
+    },
   
   });
 

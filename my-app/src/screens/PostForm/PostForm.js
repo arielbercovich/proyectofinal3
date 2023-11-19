@@ -41,6 +41,11 @@ class NewPost extends Component {
             showCamera: false,
         })
     }
+    logout(){
+        auth.signOut();
+         //Redirigir al usuario a la home del sitio.
+        this.props.navigation.navigate('Login')
+    }
     
     render(){
         return(
@@ -62,6 +67,7 @@ class NewPost extends Component {
                             onChangeText={ text => this.setState({textoPost:text}) }
                             value={this.state.textoPost}
                         /> 
+                        
                    
                         <TouchableOpacity onPress={()=>this.newPost(this.state.owner, this.state.textoPost, this.state.foto)}>
                             <Text style={styles.input} >Publicar posteo</Text>

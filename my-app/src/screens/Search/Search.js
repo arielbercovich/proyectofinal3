@@ -54,6 +54,11 @@ class Search extends Component {
       search: false,
     });
   }
+  logout(){
+    auth.signOut();
+     //Redirigir al usuario a la home del sitio.
+    this.props.navigation.navigate('Login')
+}
 
 
   render() {

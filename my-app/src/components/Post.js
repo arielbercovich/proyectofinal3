@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Image, FlatList,Modal } from 'react-native';
 import { auth, db } from '../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ class Post extends Component {
       cantidadLikes: this.props.postData.data.likes.length,
       miLike: false,
       comentario: this.props.postData.data.comentario.sort((a, b) => b.createdAt - a.createdAt),
+      showModal: false,
       
     };
   }
@@ -54,8 +55,14 @@ class Post extends Component {
   }
 
   borrarPost() {
+    this.setState({showModal:true});
+    
+  };
+  confirmDelete(){
     db.collection('posts').doc(this.props.postData.id).delete();
-  }
+    this.setState({showModal:false});
+
+  };
 
   setComment(comment) {
     const newCommentsArr = this.state.comentario.concat([comment]);
@@ -64,6 +71,16 @@ class Post extends Component {
       comentario: sortedArr,
     });
   }
+  showDeleteConfirmation(){
+    this.setState({
+      showModal:true
+    });
+  };
+  hideDeleteConfirmation(){
+    this.setState({
+      showModal:false
+    });
+  };
   
 
   render() {
@@ -140,6 +157,29 @@ class Post extends Component {
         ) : (
           <Text></Text>
         )}
+        <Modal
+            transparent={true}
+            animationType='slide'
+            visible={this.state.showModal}
+            onRequestClose={()=> this.hideDeleteConfirmation()}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContainer}>
+                  <Text style={styles.modalText}>Estas seguro que queres borrar el post?</Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity onPress={()=> this.setState({showModal:false})}>
+                      <Text style={styles.cancelButton}>Cancelar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=> this.confirmDelete()}>
+                      <Text style={styles.cancelButton}>Borrar post</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+            </Modal>
+          
+
       </View>
     );
   }
@@ -232,6 +272,32 @@ const styles = StyleSheet.create({
       padding: 8,
       borderRadius: 5,
       fontFamily: 'Arial, sans-serif',
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      padding: 20,
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+    modalText: {
+      fontSize: 18,
+      marginBottom: 20,
+      textAlign: 'center',
+      color: 'white'
+    },
+    cancelButton: {
+      color: 'blue',
+      fontSize: 18,
+    },
+    deleteButton: {
+      color: 'blue',
+      fontSize: 18,
     },
   });
   
