@@ -289,11 +289,14 @@ const styles = StyleSheet.create({
       fontSize: 18,
       marginBottom: 20,
       textAlign: 'center',
-      color: 'white'
+      color: '#cdf7f5'
     },
     cancelButton: {
-      color: 'blue',
-      fontSize: 18,
+      backgroundColor: '#4CAF50',
+        margin: 10,
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
     },
     deleteButton: {
       color: 'blue',
